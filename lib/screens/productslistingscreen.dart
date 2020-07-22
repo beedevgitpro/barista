@@ -52,7 +52,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                             fontFamily: kDefaultFontFamily,
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
-                            fontSize: _large?28:22,
+                            fontSize: _large?25:25,
                           ),
                         ),
                       ),

@@ -5,6 +5,7 @@ import 'package:barista/components/product_listing.dart';
 import 'package:barista/constants.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -17,11 +18,8 @@ class _LandingScreenState extends State<LandingScreen> {
   double _pixelRatio;
   bool _large;
   bool _medium;
+  SharedPreferences prefs;
   Widget browseCategories() {
-  // BrowseCategories({});
-
-  // @override
-  // Widget build(BuildContext context) {
     return Container(
         color: Colors.black12,
         padding: EdgeInsets.all(8),
@@ -210,6 +208,11 @@ Widget featuredProducts(){
           ],
         ));
 }
+@override
+  void initState() {
+    SharedPreferences.getInstance().then((value) => prefs=value);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     _height = MediaQuery.of(context).size.height;
