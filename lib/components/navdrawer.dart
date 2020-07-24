@@ -47,6 +47,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           ExpandingDrawerItem(
             title: 'Coffee Accessories',
             children: [
+              'View all',
               'Austrailian Made Products',
               'Barista Kits',
               'Barista Tools',
@@ -56,6 +57,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             ],
           ),
           ExpandingDrawerItem(title: 'Cleaning and Maintenance', children: [
+            'View All',
             'Barista Bags',
             'Brushes',
             'Cloths',
@@ -63,6 +65,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             'Water Filters'
           ]),
           ExpandingDrawerItem(title: 'Brewing Gear', children: [
+            'View All',
             'Cold Brew',
             'Kettle',
             'Stove Top',
@@ -70,6 +73,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             'Coffee Grinders'
           ]),
           ExpandingDrawerItem(title: 'Coffee Machine Parts', children: [
+            'View All',
             'Anti-burning Arm sleeves',
             'Portafilters',
             'Shower Screens',
@@ -79,6 +83,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           ExpandingDrawerItem(
             title: 'Brands',
             children: [
+              'View All',
               '33 Cups',
               'ASCA',
               'AeroPress',

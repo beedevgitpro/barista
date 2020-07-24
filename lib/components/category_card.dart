@@ -2,23 +2,24 @@ import 'package:barista/constants.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {
-//  CategoryCard({});
-
+ CategoryCard({this.size,this.src});
+  final double size;
+  final String src;
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 220,
+      width: size,
       padding: EdgeInsets.symmetric(horizontal:10,vertical: 5),
       child: Column(
         children: [
           Image.network(
-            'https://www.baristasupplies.com.au/wp-content/uploads/2019/10/Coffee-Storage-300x300.png',
-            width: 210,
-            height: 210,
+            src,
+            width: size,
+            height: size,
             alignment: Alignment.center,
           ),
           Container(
-            width:200,
+            width:size,
             padding: EdgeInsets.symmetric(vertical:10,horizontal:15),
             color: kPrimaryColor,
             child: Text(

@@ -46,7 +46,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 child: Row(
                   children: [
                     for (var i = 0; i < 10; i++)
-                      CategoryCard()
+                      CategoryCard(size:_large?225:200,src:'https://www.baristasupplies.com.au/wp-content/uploads/2019/10/Coffee-Storage-300x300.png')
                   ],
                 ),
               ),
