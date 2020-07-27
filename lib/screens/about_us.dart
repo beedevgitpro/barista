@@ -22,7 +22,7 @@ class AboutUsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(75),
-          child: BaristaAppBar(),
+          child: BaristaAppBar(isLarge:_large),
         ),
         backgroundColor: Colors.white,
         drawer: NavigationDrawer(),

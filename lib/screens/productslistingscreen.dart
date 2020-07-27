@@ -1,9 +1,13 @@
 import 'package:barista/components/appbar.dart';
+import 'package:barista/components/filter_ui.dart';
 import 'package:barista/components/navdrawer.dart';
 import 'package:barista/components/product_listing.dart';
 import 'package:barista/constants.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:woocommerce/models/products.dart';
+import 'package:woocommerce/woocommerce.dart';
 
 class ProductsListingScreen extends StatefulWidget {
   ProductsListingScreen({this.title});
@@ -13,16 +17,32 @@ class ProductsListingScreen extends StatefulWidget {
 }
 
 class _ProductsListingScreenState extends State<ProductsListingScreen> {
+  final WooCommerce woocommerce = WooCommerce(
+      baseUrl: 'https://dpecom.beedevstaging.com',
+      consumerKey: 'ck_8eae82f5a79ffa846d0df95902123b59bebb47fd',
+      consumerSecret: 'cs_ec0bd45cbe8ae92f3384cf95f7c2e36a7573ce82',
+      apiPath: '/wp-json/wc/v3/');
+
   final productListingScaffoldKey = GlobalKey<ScaffoldState>();
   double _height;
   double _width;
   double _pixelRatio;
   bool _isOpen = false;
   bool _large;
+  var sheetController;
   bool _medium;
   double min = 0, max = 200;
-  int start = 0, end = 200;
+  int start, end;
   String selectedNoOfItems = '12';
+  List<WooProduct> myProducts = [];
+  @override
+  void initState() {
+    start = min.toInt();
+    end = max.toInt();
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     _height = MediaQuery.of(context).size.height;
@@ -33,83 +53,28 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
     return SafeArea(
       child: Scaffold(
         key: productListingScaffoldKey,
-        floatingActionButton: FloatingActionButton(
-          onPressed: _isOpen ?? false
-              ? () {
-                  //sheetController.closed.then((value) => print('sheetclosed'));
-
-                  setState(() {
-                    _isOpen = false;
-                  });
-                  Navigator.pop(context);
-                }
-              : () {
-                  productListingScaffoldKey.currentState
-                      .showBottomSheet((context) => Container(
-                            color: Colors.white,
-                            height: _height * 0.3,
-                            padding: EdgeInsets.all(10.0),
-                            width: double.infinity,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Filter by price:',
-                                  style: TextStyle(
-                                    fontFamily: kDefaultFontFamily,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: _large ? 22 : 18,
-                                  ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Center(
-                                      child: Container(
-                                        width: _width * 0.7,
-                                        child: RangeSlider(
-                                          values: RangeValues(
-                                              start.toDouble(), end.toDouble()),
-                                          onChanged: (values) {
-                                            setState(() {
-                                              start = values.start.round();
-                                              end = values.end.round();
-                                              print(start);
-                                            });
-                                          },
-                                          min: 0,
-                                          max: 200,
-                                          labels: RangeLabels('0', '200'),
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      '200 - 300',
-                                      style: TextStyle(
-                                        fontFamily: kDefaultFontFamily,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: _large ? 26 : 25,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ));
+        floatingActionButton: _isOpen
+            ? Container()
+            : FloatingActionButton(
+                onPressed: () {
+                  sheetController = productListingScaffoldKey.currentState
+                      .showBottomSheet((context) => FilterUI());
                   setState(() {
                     _isOpen = true;
                   });
-                  print(_isOpen);
+                  sheetController.closed.then((value) => setState(() {
+                        _isOpen = false;
+                        print('closed');
+                      }));
                 },
-          child: Icon(_isOpen ?? false ? Icons.clear : Icons.tune),
-          backgroundColor: _isOpen ?? false ? Colors.red : kPrimaryColor,
-        ),
+                child: Icon(_isOpen ?? false ? Icons.clear : Icons.tune),
+                backgroundColor: _isOpen ?? false ? Colors.red : kPrimaryColor,
+              ),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(75),
-          child: BaristaAppBar(),
+          child: BaristaAppBar(
+            isLarge: _large,
+          ),
         ),
         backgroundColor: Colors.white,
         drawer: NavigationDrawer(),
@@ -119,176 +84,206 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
               padding: EdgeInsets.all(5.0),
               child: Column(children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: _large?Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          widget.title,
-                          style: TextStyle(
-                            fontFamily: kDefaultFontFamily,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: _large ? 26 : 25,
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'Show:',
-                            style: TextStyle(
-                              fontFamily: kDefaultFontFamily,
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 22,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          DropdownButton(
-                              value: selectedNoOfItems,
-                              items: [
-                                DropdownMenuItem(
-                                    child: Text(
-                                      '12',
-                                      style: TextStyle(
-                                        fontFamily: kDefaultFontFamily,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 22,
-                                      ),
-                                    ),
-                                    value: '12'),
-                                DropdownMenuItem(
-                                    child: Text(
-                                      '24',
-                                      style: TextStyle(
-                                        fontFamily: kDefaultFontFamily,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 22,
-                                      ),
-                                    ),
-                                    value: '24'),
-                                DropdownMenuItem(
-                                    child: Text(
-                                      '36',
-                                      style: TextStyle(
-                                        fontFamily: kDefaultFontFamily,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 22,
-                                      ),
-                                    ),
-                                    value: '36'),
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedNoOfItems = value;
-                                });
-                              })
-                        ],
-                      ),
-                    ],
-                  ):
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                       Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          widget.title,
-                          style: TextStyle(
-                            fontFamily: kDefaultFontFamily,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: _large ? 26 : 24,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding:  EdgeInsets.symmetric(horizontal:10.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Show:',
-                              style: TextStyle(
-                                fontFamily: kDefaultFontFamily,
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                                fontSize: _large?22:18,
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: _large
+                        ? Row(
+                            //runAlignment: ,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text(
+                                  widget.title,
+                                  style: TextStyle(
+                                    fontFamily: kDefaultFontFamily,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: _large ? 26 : 25,
+                                  ),
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            DropdownButton(
-                                value: selectedNoOfItems,
-                                items: [
-                                  DropdownMenuItem(
-                                      child: Text(
-                                        '12',
-                                        style: TextStyle(
-                                          fontFamily: kDefaultFontFamily,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: _large?22:18,
-                                        ),
-                                      ),
-                                      value: '12'),
-                                  DropdownMenuItem(
-                                      child: Text(
-                                        '24',
-                                        style: TextStyle(
-                                          fontFamily: kDefaultFontFamily,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: _large?22:18,
-                                        ),
-                                      ),
-                                      value: '24'),
-                                  DropdownMenuItem(
-                                      child: Text(
-                                        '36',
-                                        style: TextStyle(
-                                          fontFamily: kDefaultFontFamily,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: _large?22:18,
-                                        ),
-                                      ),
-                                      value: '36'),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Show:',
+                                    style: TextStyle(
+                                      fontFamily: kDefaultFontFamily,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 22,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  DropdownButton(
+                                      value: selectedNoOfItems,
+                                      items: [
+                                        DropdownMenuItem(
+                                            child: Text(
+                                              '12',
+                                              style: TextStyle(
+                                                fontFamily: kDefaultFontFamily,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 22,
+                                              ),
+                                            ),
+                                            value: '12'),
+                                        DropdownMenuItem(
+                                            child: Text(
+                                              '24',
+                                              style: TextStyle(
+                                                fontFamily: kDefaultFontFamily,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 22,
+                                              ),
+                                            ),
+                                            value: '24'),
+                                        DropdownMenuItem(
+                                            child: Text(
+                                              '36',
+                                              style: TextStyle(
+                                                fontFamily: kDefaultFontFamily,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 22,
+                                              ),
+                                            ),
+                                            value: '36'),
+                                      ],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedNoOfItems = value;
+                                        });
+                                      })
                                 ],
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedNoOfItems = value;
-                                  });
-                                })
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                ),
+                              ),
+                            ],
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Text(
+                                  widget.title,
+                                  style: TextStyle(
+                                    fontFamily: kDefaultFontFamily,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: _large ? 26 : 24,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      'Show:',
+                                      style: TextStyle(
+                                        fontFamily: kDefaultFontFamily,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: _large ? 22 : 18,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    DropdownButton(
+                                        value: selectedNoOfItems,
+                                        items: [
+                                          DropdownMenuItem(
+                                              child: Text(
+                                                '12',
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      kDefaultFontFamily,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: _large ? 22 : 18,
+                                                ),
+                                              ),
+                                              value: '12'),
+                                          DropdownMenuItem(
+                                              child: Text(
+                                                '24',
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      kDefaultFontFamily,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: _large ? 22 : 18,
+                                                ),
+                                              ),
+                                              value: '24'),
+                                          DropdownMenuItem(
+                                              child: Text(
+                                                '36',
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      kDefaultFontFamily,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: _large ? 22 : 18,
+                                                ),
+                                              ),
+                                              value: '36'),
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedNoOfItems = value;
+                                          });
+                                        })
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )),
                 SizedBox(
                   height: 10,
                 ),
-                Wrap(
-                  //crossAxisAlignment: WrapCrossAlignment.center,
-                  alignment: WrapAlignment.spaceBetween,
-                  runSpacing: 10,
-                  spacing: 20,
-                  children: [
-                    for (var i = 0; i < int.parse(selectedNoOfItems); i++)
-                      ProductListing(
-                        size: _large ? 200 : 180,
-                      )
-                  ],
-                ),
+                StreamBuilder(
+                    stream: woocommerce.getProducts(category: '271').asStream(),
+                    builder: (context, snapshot) {
+                      if (snapshot.data == null) {
+                        return Center(
+                          child:
+                              SpinKitFadingCube(size: 40, color: kPrimaryColor),
+                        );
+                      }
+                      for (WooProduct product in snapshot.data) {
+                        for(WooProductCategory cat in product.categories){
+                          if(cat.name=='Hinged')
+                            print(cat.id);
+                        }
+                        // for (WooProductImage i in product.images)
+                        //   if (i != null) 
+                        //   print(i.src ?? 'lol');
+                      }
+
+                      return Wrap(
+                        //crossAxisAlignment: WrapCrossAlignment.center,
+                        alignment: WrapAlignment.spaceBetween,
+                        runSpacing: 10,
+                        spacing: 20,
+                        children: [
+                          for (WooProduct product in snapshot.data)
+                            if (product.name != '')
+                              if (product.images.isNotEmpty)
+                                ProductListing(
+                                    size: _large ? 200 : 180,
+                                    productName: product.name,
+                                    img: product.images[0].src,
+                                    price: product.price,
+                                    regularPrice:product.regularPrice
+                                    )
+                        ],
+                      );
+                    }),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 30.0),
                   child: Row(
@@ -333,7 +328,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                       ),
                     ],
                   ),
-                )
+                ),
               ]),
             ),
           ),

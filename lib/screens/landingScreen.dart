@@ -82,7 +82,7 @@ Widget justArrived(){
           runSpacing: 10,
          children: [
            for (var i = 0; i < 10; i++) 
-           ProductListing(size: _large?200:180,)
+           ProductListing(size: _large?200:180,img: 'https://www.baristasupplies.com.au/wp-content/uploads/2014/10/Espresso-Machine-Cleaner-Cafetto-1kg-300x300.jpg',price:'500',productName:'Random product',regularPrice: '999',)
          ], 
         ),
       ],
@@ -200,7 +200,7 @@ Widget featuredProducts(){
                 child: Row(
                   children: [for (var i = 0; i < 10; i++) Padding(
                     padding: const EdgeInsets.symmetric(horizontal:8.0),
-                    child: ProductListing(size: _large?225:200,),
+                    child: ProductListing(size: _large?200:180,img: 'https://www.baristasupplies.com.au/wp-content/uploads/2014/10/Espresso-Machine-Cleaner-Cafetto-1kg-300x300.jpg',price:'500',productName:'Random product',regularPrice: '999',)
                   )],
                 ),
               ),
@@ -224,7 +224,7 @@ Widget featuredProducts(){
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(75),
-          child: BaristaAppBar(),
+          child: BaristaAppBar(isLarge:_large),
         ),
         backgroundColor: Colors.white,
         drawer: NavigationDrawer(),

@@ -27,7 +27,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
       child: Scaffold(
        appBar: PreferredSize(
           preferredSize: Size.fromHeight(75),
-          child: BaristaAppBar(),
+          child: BaristaAppBar(isLarge:_large),
         ),
         backgroundColor: Colors.white,
         drawer: NavigationDrawer(),
@@ -36,14 +36,14 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
            children: [
              Padding(
-                          padding: const EdgeInsets.only(left:10.0),
+                          padding: const EdgeInsets.only(left:10.0,top:10),
                           child: Text(
                             'Wishlist',
                             style: TextStyle(
                               fontFamily: kDefaultFontFamily,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: _large?25:25,
+                              fontSize: _large?26:24,
                             ),
                           ),
                         ),
@@ -52,12 +52,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
               padding: const EdgeInsets.symmetric(horizontal:8.0),
               child: Wrap(
                   //crossAxisAlignment: WrapCrossAlignment.center,
-                  alignment: WrapAlignment.spaceBetween,
+                  //alignment: WrapAlignment.spaceBetween,
                   runSpacing: 10,
                   spacing: 20,
                children: [
                    for (var i = 0; i < 5; i++) 
-                   WishlistItem(width: _large?_width*0.5:_width,title: '8oz Ivory Chai Sttoke Reusable Cup',)
+                   WishlistItem(width: _large?_width*0.5:_width,title: '8oz Ivory Chai Sttoke usable Cup',)
                ], 
               ),
             ),

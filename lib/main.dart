@@ -5,7 +5,7 @@ import 'package:barista/responsive_ui.dart';
 import 'package:barista/screens/landingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:splashscreen/splashscreen.dart';
+import 'package:barista/screens/barista_splash.dart';
 void main() {
   runApp(BaristaApp()
     );

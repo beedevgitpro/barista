@@ -1,4 +1,5 @@
 import 'package:barista/constants.dart';
+import 'package:barista/screens/contact_us_screen.dart';
 import 'package:barista/screens/login_screen.dart';
 import 'package:barista/screens/productslistingscreen.dart';
 import 'package:barista/screens/wholesale_screen.dart';
@@ -110,7 +111,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           DrawerItem(title: 'Gift Cards'),
           DrawerItem(title: 'Blogs'),
           DrawerItem(title: 'About us',screen:AboutUsScreen()),
-          DrawerItem(title: 'Contact us'),
+          DrawerItem(title: 'Contact us',screen: ContactUsScreen(),),
           DrawerItem(title: 'Call us: 03 8288 2399'),
           DrawerItem(title: 'Log In'),
         ]),
