@@ -129,7 +129,7 @@ class _ProductScreenState extends State<ProductScreen> {
               ),
               Divider(color: Colors.black54),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
@@ -170,7 +170,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       ),
                     ),
                   ),
-                  //SizedBox(width:15),
+                  SizedBox(width:20),
                   FlatButton(
                         color: kPrimaryColor,
                         padding:
@@ -192,8 +192,26 @@ class _ProductScreenState extends State<ProductScreen> {
                           ],
                         ),
                       ),
+                      
                 ],
               ),
+              SizedBox(height:15),
+              Row(
+                children: [
+                  Icon(Icons.favorite_border,color: Colors.black54),
+                  SizedBox(width: 6,),
+                  Text(
+                              'Add to Wishlist',
+                              style: TextStyle(
+                                fontFamily: kDefaultFontFamily,
+                                color: Colors.black,
+                                //fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                ],
+              ),
+              SizedBox(height:15),
               Divider(color: Colors.black54),
               ExpansionTile(title: Text(
                               'Description',
