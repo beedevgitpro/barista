@@ -21,12 +21,12 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
       businessName,
       pin,
       website,
-      selectedState = null,
+      selectedState,
       suburb,
       email,
       streetAddress,
       abn,
-      selectedBusinessType = null;
+      selectedBusinessType;
   bool errFlag = false,autovalidate=false;
  
 

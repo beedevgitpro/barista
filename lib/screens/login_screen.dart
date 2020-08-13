@@ -2,7 +2,10 @@ import 'package:barista/components/appbar.dart';
 import 'package:barista/components/navdrawer.dart';
 import 'package:barista/constants.dart';
 import 'package:barista/responsive_ui.dart';
+import 'package:barista/screens/landingScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:woocommerce/woocommerce.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -10,6 +13,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+    final WooCommerce woocommerce = WooCommerce(
+      baseUrl: 'https://revamp.baristasupplies.com.au/',
+      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
+      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
+      );
   final _loginFormKey = GlobalKey<FormState>();
   final _registrationFormKey = GlobalKey<FormState>();
   String email;
@@ -91,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
           actions: <Widget>[
             FlatButton(
               color: Colors.black12,
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.symmetric(vertical:8,horizontal: 15),
               child: Text(
                 'Cancel',
                 style: TextStyle(
@@ -106,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             FlatButton(
               color: kPrimaryColor,
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.symmetric(vertical:8,horizontal: 15),
               onPressed: () {
                 //Register
                 if(_registrationFormKey.currentState.validate())
@@ -255,10 +263,27 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             FlatButton(
                               color: kPrimaryColor,
-                              padding: EdgeInsets.all(8),
-                              onPressed: () {
-                                if (_loginFormKey.currentState.validate())
-                                  print('Validated');
+                              padding: EdgeInsets.symmetric(vertical:8,horizontal: 15),
+                              onPressed: () async{
+                                try{
+                                  final token = await woocommerce.authenticateViaJWT(username: email, password: password);
+                                  if(token!=null)
+                                  {int userID=await woocommerce.fetchLoggedInUserId();
+                                  SharedPreferences.getInstance().then((value) {value.setInt('userID', userID);value.setBool('isLoggedIn', true);});
+                                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LandingScreen()), (route) => false);
+                                  }
+                                }
+                                catch(e){
+                                  print(e);
+                                }
+                                
+                                // final myCart = await woocommerce.addToMyCart(quantity: 2.toString(), itemId: 17.toString());
+                                // print(myCart.price);
+                                // if (_loginFormKey.currentState.validate()){
+                                //   var token=await woocommerce.authenticateViaJWT(username: email, password: password);
+                                //   print(token.toString());
+                                  // final customer = woocommerce.loginCustomer(username: email, password: password);
+                                //   }
                                 //Submit form
                               },
                               child: Text(

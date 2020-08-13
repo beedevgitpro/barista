@@ -6,7 +6,7 @@ class CartModel extends ChangeNotifier{
   SharedPreferences prefs;
   final List<Map> items = [];
   int index=0;
-  int total=0;
+  double total=0;
   void saveState() async {
    prefs = await SharedPreferences.getInstance();
    List<String> lst=[];
@@ -38,32 +38,32 @@ class CartModel extends ChangeNotifier{
       print('null');
     notifyListeners();
   }
-  void add(String productName,String price) {
-    if(items.indexWhere((item)=>item['productName']==productName)<0)
+  void add(String productID,int qty,String price) {
+    if(items.indexWhere((item)=>item['productID']==productID)<0)
     {
-      items.add({'productName':productName,'price':int.parse(price),'quantity':1});
+      items.add({'productID':productID,'price':double.parse(price),'quantity':qty});
       calculateTotalPrice();}
     else{
-      incrementQuantity(productName);
+      incrementQuantity(productID);
     }
     saveState();
     notifyListeners();
   }
-  void deleteItem(String productName)
+  void deleteItem(String productID)
   {
-    items.removeAt(items.indexWhere((item)=>item['productName']==productName));
+    items.removeAt(items.indexWhere((item)=>item['productID']==productID));
     calculateTotalPrice();
     saveState();
     notifyListeners();
   }
-  void incrementQuantity(String productName){
-    items[items.indexWhere((item)=>item['productName']==productName)]['quantity']++;
+  void incrementQuantity(String productID){
+    items[items.indexWhere((item)=>item['productID']==productID)]['quantity']++;
     calculateTotalPrice();
     saveState();
     notifyListeners();
   }
-  void decrementQuantity(String productName){
-    items[items.indexWhere((item)=>item['productName']==productName)]['quantity']--;
+  void decrementQuantity(String productID){
+    items[items.indexWhere((item)=>item['productID']==productID)]['quantity']--;
     calculateTotalPrice();
     saveState();
     notifyListeners();

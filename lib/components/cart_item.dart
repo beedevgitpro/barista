@@ -1,10 +1,37 @@
 import 'package:barista/constants.dart';
+import 'package:barista/models/cart_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+import 'package:woocommerce/woocommerce.dart';
 
-class CartItem extends StatelessWidget {
-  CartItem({this.title, this.width});
+class CartItem extends StatefulWidget {
+
+  CartItem({this.productID, this.width,this.qty});
   final double width;
-  final String title;
+  final String productID;
+  final int qty;
+
+  @override
+  _CartItemState createState() => _CartItemState();
+}
+
+class _CartItemState extends State<CartItem> {
+    final WooCommerce woocommerce = WooCommerce(
+      baseUrl: 'https://revamp.baristasupplies.com.au/',
+      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
+      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
+      apiPath: '/wp-json/wc/v3/');
+  WooProduct product;
+  bool _loading=true;
+    @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    woocommerce.getProductById(id: int.parse(widget.productID)).then((value) => setState((){
+      _loading=false;
+      product=value;}));
+  }
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -12,22 +39,22 @@ class CartItem extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-        width: width,
-        height: width * 0.35,
+        width: widget.width,
+        height: widget.width * 0.35,
         child: Row(
             children: [
-              Image.network(
-                  'https://www.baristasupplies.com.au/wp-content/uploads/2019/10/8oz-Ivory-Chai-Sttoke-Cup-300x300.jpg',
-                  height: width * 0.3,
-                  width: width * 0.3),
+              Image.network(product.images[0].src,
+                  //'https://www.baristasupplies.com.au/wp-content/uploads/2019/10/8oz-Ivory-Chai-Sttoke-Cup-300x300.jpg',
+                  height: widget.width * 0.3,
+                  width: widget.width * 0.3),
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                    Container(
-                      width: width * 0.50,
+                      width: widget.width * 0.50,
                       child: Text(
-                        title,
+                        product.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -41,17 +68,17 @@ class CartItem extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('\$500',style:TextStyle(
+                      Text('\$${product.price}',style:TextStyle(
                         fontFamily: kDefaultFontFamily,
                                 color: Colors.black, fontSize:18,),),
-                      SizedBox(width:width*0.1),
+                      SizedBox(width:widget.width*0.1),
                       Align(
                         alignment: Alignment.center,
                         child: Text(
-                          'In Stock',
+                          product.stockStatus=='instock'?'In Stock':'Out of Stock',
                           style: TextStyle(
                             fontFamily: kDefaultFontFamily,
-                            color: Colors.green,
+                            color: product.stockStatus=='instock'?Colors.green:Colors.red,
                             //fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -67,7 +94,7 @@ class CartItem extends StatelessWidget {
                         padding: EdgeInsets.all(8),
                         onPressed: () {},
                         child: Text(
-                          'Add to Cart',
+                          'Add to Wishlist',
                           style: TextStyle(
                             fontFamily: kDefaultFontFamily,
                             color: Colors.white,
@@ -79,10 +106,14 @@ class CartItem extends StatelessWidget {
                       SizedBox(width: 8),
                       IconButton(
                         padding: EdgeInsets.all(8),
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                        Provider.of<CartModel>(context, listen: false).deleteItem(widget.productID);
+                  });
+                        },
                         icon: Icon(
                           Icons.delete,
-                          color: Colors.red,
+                          color: Colors.grey,
                         ),
                         iconSize: 35,
                         // child: Text(
@@ -104,8 +135,12 @@ class CartItem extends StatelessWidget {
                children: [
                 IconButton(icon: Icon(Icons.keyboard_arrow_up), onPressed: (){
                   //incrementqty
+                  setState(() {
+                    Provider.of<CartModel>(context, listen: false).incrementQuantity(widget.productID);
+                  });
+                  
                   }),
-                  Text('1',style: TextStyle(
+                  Text(widget.qty.toString(),style: TextStyle(
                             fontFamily: kDefaultFontFamily,
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -113,6 +148,12 @@ class CartItem extends StatelessWidget {
                           ),),
                   IconButton(icon: Icon(Icons.keyboard_arrow_down), onPressed: (){
                   //decrementqty
+                  setState(() {
+                    if(widget.qty>1)
+                  Provider.of<CartModel>(context, listen: false).decrementQuantity(widget.productID);
+                  else
+                  Provider.of<CartModel>(context, listen: false).deleteItem(widget.productID);
+                  });
                   })
                ], 
               )

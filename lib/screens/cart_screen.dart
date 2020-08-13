@@ -4,6 +4,7 @@ import 'package:barista/models/cart_model.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:woocommerce/woocommerce.dart';
 class CartScreen extends StatefulWidget {
   @override
   _CartScreenState createState() => _CartScreenState();
@@ -15,6 +16,11 @@ class _CartScreenState extends State<CartScreen> {
   double _pixelRatio;
   bool _large;
   bool _medium;
+  final WooCommerce woocommerce = WooCommerce(
+      baseUrl: 'https://revamp.baristasupplies.com.au/',
+      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
+      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
+      );
   @override
   Widget build(BuildContext context) {
     _height = MediaQuery.of(context).size.height;
@@ -42,7 +48,7 @@ class _CartScreenState extends State<CartScreen> {
           
           Expanded(child: Consumer<CartModel>(
                 builder: (context, cart, child) {
-                  return false?Center(
+                  return cart.isCartEmpty()?Center(
                      child: Text('Your Cart is currently empty',style: TextStyle(
                       fontFamily: kDefaultFontFamily, fontSize: 16
                      ),),
@@ -50,8 +56,8 @@ class _CartScreenState extends State<CartScreen> {
           SingleChildScrollView(
           child: Column(
              children: [
-                for (var i = 0; i < 5; i++) 
-                   CartItem(width: _large?_width*0.5:_width,title: '8oz Ivory Chai Sttoke usable Cup',)
+                for (Map item in cart.items) 
+                   CartItem(width: _large?_width*0.5:_width,productID:item['productID'],qty:item['quantity'])
              ], 
             ),
           );})
@@ -61,7 +67,7 @@ class _CartScreenState extends State<CartScreen> {
             width: double.infinity,
             color: kPrimaryColor,
             alignment: Alignment.center,
-            child: Text(false?'Back To Shopping':'Checkout',style: TextStyle(
+            child: Text(Provider.of<CartModel>(context, listen: false).isCartEmpty()?'Back To Shopping':'Checkout',style: TextStyle(
                   fontFamily: kDefaultFontFamily,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

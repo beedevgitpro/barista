@@ -19,7 +19,7 @@ class _ContactUsScreenState extends State<ContactUsScreen>
   double _height;
   double _width;
   double _pixelRatio;
-  final _wholesaleFormKey = GlobalKey<FormState>();
+  
   bool errFlag = false,autovalidate=false;
    final orderNumberNode = FocusNode();
    final fNameNode = FocusNode();
@@ -123,113 +123,124 @@ class _ContactUsScreenState extends State<ContactUsScreen>
                       )),
                   Expanded(
                     child: TabBarView(controller: _tabController, children: [
-                      Column(
-                        children: [
-                          Expanded(
-                              flex: 2,
-                              child: Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.location_on,
-                                          color: kPrimaryColor,
-                                          size: 35,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                            child: Text(
-                                          '${_large?'Address: ':''}11/76 Rushdale St, Knoxfield, Victoria 3180, Australia.',
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                            fontSize: 18,
-                                            fontFamily: kDefaultFontFamily,
-                                          ),
-                                        ))
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.phone,
-                                          color: kPrimaryColor,
-                                          size: 30,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                            child: Text(
-                                          '${_large?'Phone Number: ':''}(03) 8288 2399',
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                            fontSize: 18,
-                                            fontFamily: kDefaultFontFamily,
-                                          ),
-                                        ))
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.mail,
-                                          color: kPrimaryColor,
-                                          size: 30,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                            child: Text(
-                                          '${_large?'Email: ':''}info@baristasupplies.com.au',
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                            fontSize: 18,
-                                            fontFamily: kDefaultFontFamily,
-                                          ),
-                                        ))
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.access_time,
-                                          color: kPrimaryColor,
-                                          size: 30,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                            child: Text(
-                                          '${_large?'Business Hours: ':''}Monday - Friday 9am to 5pm AEST',
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                            fontSize: 18,
-                                            fontFamily: kDefaultFontFamily,
-                                          ),
-                                        ))
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              )),
-                          Expanded(
-                              flex: 3,
-                              child: Image.network(
-                                'https://www.google.com/maps/about/images/mymaps/mymaps-desktop-16x9.png',
-                                fit: BoxFit.fill,
-                              ))
-                        ],
-                      ),
-                      Column()
+                      buildVisitUsTab(),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 20,
+                          runSpacing: 10,
+                          children: [
+
+                          ],
+                      )
                     ]),
                   ),
                 ],
               ),
-            )));}
+            ),),);}
+
+  Column buildVisitUsTab() {
+    return Column(
+                      children: [
+                        Expanded(
+                            flex: 2,
+                            child: Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.location_on,
+                                        color: kPrimaryColor,
+                                        size: 35,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                          child: Text(
+                                        '${_large?'Address: ':''}11/76 Rushdale St, Knoxfield, Victoria 3180, Australia.',
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 18,
+                                          fontFamily: kDefaultFontFamily,
+                                        ),
+                                      ))
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.phone,
+                                        color: kPrimaryColor,
+                                        size: 30,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                          child: Text(
+                                        '${_large?'Phone Number: ':''}(03) 8288 2399',
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 18,
+                                          fontFamily: kDefaultFontFamily,
+                                        ),
+                                      ))
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.mail,
+                                        color: kPrimaryColor,
+                                        size: 30,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                          child: Text(
+                                        '${_large?'Email: ':''}info@baristasupplies.com.au',
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 18,
+                                          fontFamily: kDefaultFontFamily,
+                                        ),
+                                      ))
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.access_time,
+                                        color: kPrimaryColor,
+                                        size: 30,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                          child: Text(
+                                        '${_large?'Business Hours: ':''}Monday - Friday 9am to 5pm AEST',
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 18,
+                                          fontFamily: kDefaultFontFamily,
+                                        ),
+                                      ))
+                                    ],
+                                  )
+                                ],
+                              ),
+                            )),
+                        Expanded(
+                            flex: 3,
+                            child: Image.network(
+                              'https://www.google.com/maps/about/images/mymaps/mymaps-desktop-16x9.png',
+                              fit: BoxFit.fill,
+                            ))
+                      ],
+                    );
+  }
             Container buildCustomTextField(setValue setval, String labelText, validationFunction validator, FocusNode fNode, FocusNode nextNode) {
     return Container(
       width: _large ? _width * 0.4 : _width,

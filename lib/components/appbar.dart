@@ -6,7 +6,7 @@ class BaristaAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 3,
+      elevation: 0,
       automaticallyImplyLeading: false,
       flexibleSpace: Container(
           padding: EdgeInsets.all(10),

@@ -2,9 +2,10 @@ import 'package:barista/constants.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {
- CategoryCard({this.size,this.src});
+ CategoryCard({this.size,this.src,this.categoryName});
   final double size;
   final String src;
+  final String categoryName;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,7 +24,7 @@ class CategoryCard extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical:10,horizontal:15),
             color: kPrimaryColor,
             child: Text(
-              'Essentials',
+              this.categoryName,
               style: TextStyle(
                   fontFamily: kDefaultFontFamily,
                   color: Colors.white,

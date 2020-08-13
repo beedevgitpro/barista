@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:barista/components/appbar.dart';
 import 'package:barista/components/filter_ui.dart';
 import 'package:barista/components/navdrawer.dart';
@@ -10,17 +12,18 @@ import 'package:woocommerce/models/products.dart';
 import 'package:woocommerce/woocommerce.dart';
 
 class ProductsListingScreen extends StatefulWidget {
-  ProductsListingScreen({this.title});
+  ProductsListingScreen({this.title,@required this.categoryID});
   final String title;
+  final int categoryID;
   @override
   _ProductsListingScreenState createState() => _ProductsListingScreenState();
 }
 
 class _ProductsListingScreenState extends State<ProductsListingScreen> {
   final WooCommerce woocommerce = WooCommerce(
-      baseUrl: 'https://dpecom.beedevstaging.com',
-      consumerKey: 'ck_8eae82f5a79ffa846d0df95902123b59bebb47fd',
-      consumerSecret: 'cs_ec0bd45cbe8ae92f3384cf95f7c2e36a7573ce82',
+      baseUrl: 'https://revamp.baristasupplies.com.au/',
+      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
+      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
       apiPath: '/wp-json/wc/v3/');
 
   final productListingScaffoldKey = GlobalKey<ScaffoldState>();
@@ -39,10 +42,16 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
   void initState() {
     start = min.toInt();
     end = max.toInt();
+    //getCategories();
     super.initState();
   }
-
-
+  getCategories(){
+    woocommerce.getProductCategories(parent:0).then((value) {
+      print(value.length);
+      for(WooProductCategory category in value)
+        print(category.name);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     _height = MediaQuery.of(context).size.height;
@@ -247,7 +256,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                   height: 10,
                 ),
                 StreamBuilder(
-                    stream: woocommerce.getProducts(category: '271').asStream(),
+                    stream: woocommerce.getProducts(perPage: int.parse(selectedNoOfItems),category: '${widget.categoryID}').asStream(),
                     builder: (context, snapshot) {
                       if (snapshot.data == null) {
                         return Center(
@@ -255,11 +264,9 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                               SpinKitFadingCube(size: 40, color: kPrimaryColor),
                         );
                       }
+                      print(snapshot.data.length);
                       for (WooProduct product in snapshot.data) {
-                        for(WooProductCategory cat in product.categories){
-                          if(cat.name=='Hinged')
-                            print(cat.id);
-                        }
+                        print(product.name);
                         // for (WooProductImage i in product.images)
                         //   if (i != null) 
                         //   print(i.src ?? 'lol');
@@ -273,13 +280,15 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                         children: [
                           for (WooProduct product in snapshot.data)
                             if (product.name != '')
+                              //if(product.price==null)
                               if (product.images.isNotEmpty)
                                 ProductListing(
                                     size: _large ? 200 : 180,
                                     productName: product.name,
                                     img: product.images[0].src,
-                                    price: product.price,
-                                    regularPrice:product.regularPrice
+                                    price: product.price.toString(),
+                                    regularPrice:product.regularPrice.isEmpty?'0':product.regularPrice,
+                                    product: product,
                                     )
                         ],
                       );
