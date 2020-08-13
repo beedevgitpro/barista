@@ -1,10 +1,9 @@
-import 'package:barista/components/appbar.dart';
 import 'package:barista/components/navdrawer.dart';
-import 'package:barista/components/product_listing.dart';
 import 'package:barista/constants.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:barista/screens/cart_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 typedef void setValue(String value);
 typedef void validationFunction(String value);
 class ContactUsScreen extends StatefulWidget {
@@ -19,12 +18,23 @@ class _ContactUsScreenState extends State<ContactUsScreen>
   double _height;
   double _width;
   double _pixelRatio;
-  
+  String phone,email,firstName,lastName,orderNumber,companyName,selectedType='Sales';
   bool errFlag = false,autovalidate=false;
+  Map enquiryTypes = {
+    'Sales': 'Sales',
+    'Returns': 'Returns',
+    'Accounts': 'Accounts',
+    'Wholesale': 'Wholesale',
+    'Other Enquiry': 'Other Enquiry',
+    'Tasmania': 'TAS',
+    'Victoria': 'VIC',
+    'Western Australia': 'WA'
+  };
    final orderNumberNode = FocusNode();
+   final enquiryTypeNode = FocusNode();
    final fNameNode = FocusNode();
   final lNameNode = FocusNode();
-  final bNameNode = FocusNode();
+  final companyNameNode = FocusNode();
   final phoneNode = FocusNode();
   final emailNode = FocusNode();
   final messageNode = FocusNode();
@@ -124,19 +134,163 @@ class _ContactUsScreenState extends State<ContactUsScreen>
                   Expanded(
                     child: TabBarView(controller: _tabController, children: [
                       buildVisitUsTab(),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                          spacing: 20,
-                          runSpacing: 10,
-                          children: [
-
-                          ],
-                      )
+                      buildEnquiryForm()
                     ]),
                   ),
                 ],
               ),
             ),),);}
+
+  Wrap buildEnquiryForm() {
+    return Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 20,
+                        runSpacing: 10,
+                        children: [
+                          buildCustomTextField(
+                              (value) {
+                                firstName = value;
+                              },
+                              'First Name',
+                              (value) {
+                                if (value.isEmpty) {
+                                  if (!errFlag) {
+                                    errFlag = true;
+                                    fNameNode.requestFocus();
+                                  }
+                                  return 'Required';
+                                }
+                              },
+                              fNameNode,
+                              lNameNode),
+                          buildCustomTextField(
+                              (value) {
+                                lastName = value;
+                              },
+                              'Last Name',
+                              (value) {
+                                if (value.isEmpty) {
+                                  if (!errFlag) {
+                                    errFlag = true;
+                                    lNameNode.requestFocus();
+                                  }
+                                  return 'Required';
+                                }
+                              },
+                              lNameNode,
+                              emailNode),
+                              buildCustomTextField(
+                              (value) {
+                                email = value;
+                              },
+                              'Email Address',
+                              (value) {
+                                if (value.isEmpty) {
+                                  if (!errFlag) {
+                                    errFlag = true;
+                                    emailNode.requestFocus();
+                                  }
+                                  return 'Required';
+                                }
+                              },
+                              emailNode,
+                              companyNameNode),
+                              buildCustomTextField(
+                              (value) {
+                                companyName = value;
+                              },
+                              'Company Name',
+                              (value) {
+                                if (value.isEmpty) {
+                                  if (!errFlag) {
+                                    errFlag = true;
+                                    companyNameNode.requestFocus();
+                                  }
+                                  return 'Required';
+                                }
+                              },
+                              companyNameNode,
+                              phoneNode),
+                               buildCustomTextField(
+                              (value) {
+                                phone = value;
+                              },
+                              'Phone Number',
+                              (value) {
+                                if (value.isEmpty) {
+                                  if (!errFlag) {
+                                    errFlag = true;
+                                    phoneNode.requestFocus();
+                                  }
+                                  return 'Required';
+                                }
+                              },
+                              phoneNode,
+                              orderNumberNode,isNumber:true),
+                              buildCustomTextField(
+                              (value) {
+                                orderNumber = value;
+                              },
+                              'Order Number (If relevant)',
+                              (value) {
+                                return null;
+                              
+                              },
+                              orderNumberNode,
+                              null),
+                              Padding(
+                            padding: EdgeInsets.all(_large ? 0 : 8),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              width: _large ? _width * 0.4 : _width,
+                              child: DropdownButtonHideUnderline(
+                                child: ButtonTheme(
+                                  alignedDropdown: true,
+                                  child: DropdownButtonFormField(
+                                      hint: Text('Select Enquiry Type',
+                                          style: TextStyle(
+                                            fontFamily: kDefaultFontFamily,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 16,
+                                          )),
+                                      value: selectedType,
+                                      items: [
+                                        for (String enquiryType in enquiryTypes.keys)
+                                          DropdownMenuItem(
+                                              child: Text(enquiryType.toString(),
+                                                  style: TextStyle(
+                                                    fontFamily:
+                                                        kDefaultFontFamily,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    fontSize: 16,
+                                                  )),
+                                              value: enquiryTypes[enquiryType].toString())
+                                      ],
+                                      validator: (value) {
+                                        if (value == null) {
+                                          if (!errFlag) {
+                                            errFlag = true;
+                                            enquiryTypeNode.requestFocus();
+                                          }
+                                          return 'Selection required!';
+                                        }
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedType= value;
+                                          messageNode.requestFocus();
+                                        });
+                                      }),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                    );
+  }
 
   Column buildVisitUsTab() {
     return Column(
@@ -241,7 +395,7 @@ class _ContactUsScreenState extends State<ContactUsScreen>
                       ],
                     );
   }
-            Container buildCustomTextField(setValue setval, String labelText, validationFunction validator, FocusNode fNode, FocusNode nextNode) {
+            Container buildCustomTextField(setValue setval, String labelText, validationFunction validator, FocusNode fNode, FocusNode nextNode,{bool isNumber=false}) {
     return Container(
       width: _large ? _width * 0.4 : _width,
       padding: EdgeInsets.all(8),
@@ -249,6 +403,10 @@ class _ContactUsScreenState extends State<ContactUsScreen>
         onFieldSubmitted: (value) {
           nextNode==null?FocusScope.of(context).unfocus():nextNode.requestFocus();
         },
+        keyboardType: isNumber?TextInputType.phone:TextInputType.text,
+        inputFormatters: isNumber?[
+          WhitelistingTextInputFormatter.digitsOnly,
+        ]:[],
         focusNode: fNode,
         onChanged: setval,
         cursorColor: kPrimaryColor,
