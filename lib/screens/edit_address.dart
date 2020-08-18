@@ -1,19 +1,17 @@
 import 'package:barista/components/appbar.dart';
 import 'package:barista/components/navdrawer.dart';
 import 'package:barista/constants.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
-import 'package:barista/screens/landingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:woocommerce/woocommerce.dart';
-typedef void setValue(String value);
-typedef void validationFunction(String value);
+typedef void SetValue(String value);
+typedef void ValidationFunction(String value);
 class EditAddress extends StatefulWidget {
-  EditAddress({this.customer});
-  WooCustomer customer;
+  EditAddress({this.customer,this.isBilling});
+  final WooCustomer customer;
+  final bool isBilling;
   @override
   _EditAddressState createState() => _EditAddressState();
 }
@@ -23,6 +21,8 @@ class _EditAddressState extends State<EditAddress> {
   final fNameNode = FocusNode();
   final lNameNode = FocusNode();
   final bNameNode = FocusNode();
+  final emailNode = FocusNode();
+  final phoneNode = FocusNode();
   final streetNode = FocusNode();
   final suburbNode = FocusNode();
   final stateNode = FocusNode();
@@ -40,16 +40,16 @@ class _EditAddressState extends State<EditAddress> {
   };
   String firstName,
       lastName,
-      businessName,suburb,selectedState,streetAddress,postcode;
+      businessName,suburb,selectedState,streetAddress,postcode,phone,email;
   double _height;
   double _width;
   double _pixelRatio;
   bool _large,_medium;
   int userID;
   final WooCommerce woocommerce = WooCommerce(
-      baseUrl: 'https://revamp.baristasupplies.com.au/',
-      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
-      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
+      baseUrl: kBaseUrl,
+      consumerKey: kConsumerKey,
+      consumerSecret: kConsumerSecret,
       );
   @override
   void initState() {
@@ -70,7 +70,22 @@ class _EditAddressState extends State<EditAddress> {
         ),
          backgroundColor: Colors.white,
             drawer: NavigationDrawer(),
-          body: SafeArea(child: SingleChildScrollView(child: Column(children: [
+          body: SafeArea(child: SingleChildScrollView(child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+             Padding(
+                    padding: const EdgeInsets.only(left:10.0,top:10),
+                          child: Text(
+                            widget.isBilling?'Billing Address':'Shipping Address',
+                            style: TextStyle(
+                              fontFamily: kDefaultFontFamily,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: _large?26:24,
+                            ),
+                          ),
+                        ),
+            SizedBox(height: 20,),
             Form(
                       key: _addressFormKey,
                       child: Center(
@@ -166,7 +181,7 @@ class _EditAddressState extends State<EditAddress> {
                                               fontFamily: kDefaultFontFamily,
                                               color: Colors.black,
                                               fontWeight: FontWeight.normal,
-                                              fontSize: 16,
+                                              fontSize: getFontSize(context, -2),
                                             )),
                                         value: selectedState,
                                         items: [
@@ -179,7 +194,7 @@ class _EditAddressState extends State<EditAddress> {
                                                       color: Colors.black,
                                                       fontWeight:
                                                           FontWeight.normal,
-                                                      fontSize: 16,
+                                                      fontSize: getFontSize(context, -2),
                                                     )),
                                                 value: states[state].toString())
                                         ],
@@ -254,6 +269,7 @@ class _EditAddressState extends State<EditAddress> {
                                     }
                                     return 'Required';
                                   }
+                                  return null;
                                 },
                                 inputFormatters: [
                                   WhitelistingTextInputFormatter.digitsOnly
@@ -264,25 +280,85 @@ class _EditAddressState extends State<EditAddress> {
                         ),
                       ),
                     ),
-                    FlatButton(
-                      onPressed: (){},
-                      child: Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Text('Save Address',style: TextStyle(
-                                                        fontFamily:
-                                                            kDefaultFontFamily,
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        fontSize: 16,
-                                                      ),),
-                    ),)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Padding(
+                          padding:  EdgeInsets.all(10.0),
+                          child: FlatButton(
+                            color: Colors.grey[200],
+                            onPressed: (){
+                              Navigator.pop(context);
+                            },
+                            child: Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Text('Back',style: TextStyle(
+                                                              fontFamily:
+                                                                  kDefaultFontFamily,
+                                                              color: kPrimaryColor,
+                                                              fontWeight:
+                                                                  FontWeight.normal,
+                                                              fontSize: getFontSize(context, 0),
+                                                            ),),
+                          ),),
+                        ),
+                        Padding(
+                      padding:  EdgeInsets.all(10.0),
+                      child: FlatButton(
+                        color: kPrimaryColor,
+                        onPressed: ()async{
+                          if(_addressFormKey.currentState.validate())
+                          await woocommerce.updateCustomer(id: widget.customer.id,data:{
+                            if(widget.isBilling)...{"billing": {
+                                "first_name": firstName,
+                                  "last_name":lastName,
+    "company": businessName,
+    "address_1": streetAddress,
+    "address_2": "",
+    "city": suburb,
+    "state": selectedState,
+    "postcode": postcode,
+    "country": "US",
+    "email": "john.doe@example.com",
+    "phone": phone
+                          }}else...{
+                            "shipping": {
+                                "first_name": firstName,
+                                  "last_name":lastName,
+    "company": businessName,
+    "address_1": streetAddress,
+    "address_2": "",
+    "city": suburb,
+    "state": selectedState,
+    "postcode": postcode,
+    "country": "US",
+    "email": "john.doe@example.com",
+    "phone": phone
+                          }
+                          }
+                          });
+                        },
+                        child: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Text('Save Address',style: TextStyle(
+                                                          fontFamily:
+                                                              kDefaultFontFamily,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          fontSize: getFontSize(context, 0),
+                                                        ),),
+                      ),),
+                    )
+                      ],
+                    ),
+                    
           ],),),),
       ),
     );
   }
-   Container buildCustomTextField(String initialValue,setValue setval, String labelText,
-      validationFunction validator, FocusNode fNode, FocusNode nextNode) {
+   Container buildCustomTextField(String initialValue,SetValue setval, String labelText,
+      ValidationFunction validator, FocusNode fNode, FocusNode nextNode) {
     return Container(
       width: _large ? _width * 0.4 : _width,
       padding: EdgeInsets.all(8),

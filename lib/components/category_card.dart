@@ -1,4 +1,5 @@
 import 'package:barista/constants.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {
@@ -29,7 +30,7 @@ class CategoryCard extends StatelessWidget {
                   fontFamily: kDefaultFontFamily,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: getFontSize(context, 0),
                   ),
                   textAlign: TextAlign.center,
             ),

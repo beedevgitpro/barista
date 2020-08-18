@@ -112,7 +112,7 @@ class AboutUsScreen extends StatelessWidget {
                         Align(
                             alignment: Alignment.topLeft,
                             child: Icon(Icons.navigate_next)),
-                        //Text('• ',style: TextStyle(fontSize:22),)),
+                        
                         Expanded(
                           child: Text(
                             '$listItem',

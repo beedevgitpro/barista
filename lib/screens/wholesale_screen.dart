@@ -1,12 +1,13 @@
 import 'package:barista/components/appbar.dart';
 import 'package:barista/components/navdrawer.dart';
 import 'package:barista/constants.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-typedef void setValue(String value);
-typedef void validationFunction(String value);
+typedef void SetValue(String value);
+typedef void ValidationFunction(String value);
 
 class WholesaleScreen extends StatefulWidget {
   @override
@@ -309,7 +310,7 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
                                               fontFamily: kDefaultFontFamily,
                                               color: Colors.black,
                                               fontWeight: FontWeight.normal,
-                                              fontSize: 16,
+                                              fontSize: getFontSize(context, -2),
                                             )),
                                         value: selectedState,
                                         items: [
@@ -322,7 +323,7 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
                                                       color: Colors.black,
                                                       fontWeight:
                                                           FontWeight.normal,
-                                                      fontSize: 16,
+                                                      fontSize: getFontSize(context, -2),
                                                     )),
                                                 value: states[state].toString())
                                         ],
@@ -334,6 +335,7 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
                                             }
                                             return 'Selection required!';
                                           }
+                                          return null;
                                         },
                                         onChanged: (value) {
                                           setState(() {
@@ -353,7 +355,6 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
                                 cursorColor: kPrimaryColor,
                                 textInputAction: TextInputAction.next,
                                 onFieldSubmitted: (value) {
-                                  //currentNode.unfocus();
                                   emailNode.requestFocus();
                                 },
                                 focusNode: phoneNode,
@@ -396,6 +397,7 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
                                     }
                                     return 'Required';
                                   }
+                                  return null;
                                 },
                                 inputFormatters: [
                                   WhitelistingTextInputFormatter.digitsOnly
@@ -457,7 +459,7 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
                                               fontFamily: kDefaultFontFamily,
                                               color: Colors.black,
                                               fontWeight: FontWeight.normal,
-                                              fontSize: 16,
+                                              fontSize: getFontSize(context, -2),
                                             )),
                                         value: selectedBusinessType,
                                         items: [
@@ -469,7 +471,7 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
                                                         kDefaultFontFamily,
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.normal,
-                                                    fontSize: 16,
+                                                    fontSize: getFontSize(context, -2),
                                                   )),
                                               value: type
                                                   .toLowerCase()
@@ -485,6 +487,7 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
                                             }
                                             return 'Selection required!';
                                           }
+                                          return null;
                                         },
                                         onChanged: (value) {
                                           setState(() {
@@ -534,8 +537,8 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
     );
   }
 
-  Container buildCustomTextField(setValue setval, String labelText,
-      validationFunction validator, FocusNode fNode, FocusNode nextNode) {
+  Container buildCustomTextField(SetValue setval, String labelText,
+      ValidationFunction validator, FocusNode fNode, FocusNode nextNode) {
     return Container(
       width: _large ? _width * 0.4 : _width,
       padding: EdgeInsets.all(8),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-class CartModel extends ChangeNotifier{
+class WishlistModel extends ChangeNotifier{
   SharedPreferences prefs;
   final List<Map> items = [];
   int index=0;
@@ -12,13 +12,13 @@ class CartModel extends ChangeNotifier{
    for (var item in items){
      lst.add(jsonEncode(item));
    }
-   prefs.setStringList('CartState',lst);
-   print(prefs.getStringList('CartState'));
+   prefs.setStringList('WishlistState',lst);
+   print(prefs.getStringList('WishlistState'));
   }
   void clearState() async{
     prefs = await SharedPreferences.getInstance();
     items.clear();
-    prefs.setStringList('CartState', null);
+    prefs.remove('WishlistState');
     calculateTotalPrice();
     notifyListeners();
   }
@@ -27,8 +27,8 @@ class CartModel extends ChangeNotifier{
   }
   void retrieveState()async{
     prefs = await SharedPreferences.getInstance();
-    if(prefs.getStringList('CartState')!=null){
-      List<String> lst=prefs.getStringList('CartState');
+    if(prefs.getStringList('WishlistState')!=null){
+      List<String> lst=prefs.getStringList('WishlistState');
       for(var item in lst)
         items.add(jsonDecode(item));
       calculateTotalPrice();

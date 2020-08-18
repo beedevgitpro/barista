@@ -1,15 +1,19 @@
 import 'package:barista/components/cart_item.dart';
 import 'package:barista/constants.dart';
 import 'package:barista/models/cart_model.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:woocommerce/woocommerce.dart';
 class CartScreen extends StatefulWidget {
   @override
   _CartScreenState createState() => _CartScreenState();
 }
-
+void retrieveCartItems(){
+  http.get('').then((value) => print(value));
+}
 class _CartScreenState extends State<CartScreen> {
   double _height;
   double _width;
@@ -17,9 +21,9 @@ class _CartScreenState extends State<CartScreen> {
   bool _large;
   bool _medium;
   final WooCommerce woocommerce = WooCommerce(
-      baseUrl: 'https://revamp.baristasupplies.com.au/',
-      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
-      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
+      baseUrl: kBaseUrl,
+      consumerKey: kConsumerKey,
+      consumerSecret: kConsumerSecret,
       );
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,7 @@ class _CartScreenState extends State<CartScreen> {
                   fontFamily: kDefaultFontFamily,
                   color: kPrimaryColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: 28,
+                  fontSize: getFontSize(context, 10),
                 ),),
      ), 
      body: SafeArea(
@@ -50,7 +54,7 @@ class _CartScreenState extends State<CartScreen> {
                 builder: (context, cart, child) {
                   return cart.isCartEmpty()?Center(
                      child: Text('Your Cart is currently empty',style: TextStyle(
-                      fontFamily: kDefaultFontFamily, fontSize: 16
+                      fontFamily: kDefaultFontFamily, fontSize: getFontSize(context, -2)
                      ),),
                    ):
           SingleChildScrollView(
@@ -71,7 +75,7 @@ class _CartScreenState extends State<CartScreen> {
                   fontFamily: kDefaultFontFamily,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: getFontSize(context, 2),
                 ),),),
         ], 
        ),

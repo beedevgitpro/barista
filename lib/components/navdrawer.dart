@@ -1,4 +1,5 @@
 import 'package:barista/constants.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:barista/screens/contact_us_screen.dart';
 import 'package:barista/screens/login_screen.dart';
 import 'package:barista/screens/my_account.dart';
@@ -18,16 +19,28 @@ class NavigationDrawer extends StatefulWidget {
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
   final WooCommerce woocommerce = WooCommerce(
-      baseUrl: 'https://revamp.baristasupplies.com.au/',
-      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
-      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
+      baseUrl: kBaseUrl,
+      consumerKey: kConsumerKey,
+      consumerSecret: kConsumerSecret,
       apiPath: '/wp-json/wc/v3/');
     List<WooProductCategory> parentCategory=[];
     bool isLoggedIn=false;
-    bool _isLoading=true;
+    Map parentCategories={
+      'Beverages':175,
+      'Brands':179,
+      'Brewing Gear':178,
+      'Cleaning & Maintenance':181,
+      'Coffee Accessories':176,
+      'Coffee Machine Part':180,
+      'Coffee Maker':180,
+    };
     getParentCartegories(){
-      woocommerce.getProductCategories(parent:0).then((value) => setState(() {parentCategory=value;_isLoading=false;}));
-      
+      woocommerce.getProductCategories(parent:0).then((value) => setState(() {
+        parentCategory=value;
+        for(var i in parentCategory)
+          print(i.name +': '+i.id.toString());
+        }));
+        
     }
   void _isLoggedIn() {
     SharedPreferences.getInstance().then((value) {
@@ -39,12 +52,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       });
     });
   }
-
   @override
   void initState() {
     super.initState();
     _isLoggedIn();
-    getParentCartegories();
   }
 
   @override
@@ -65,10 +76,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
 
                   
                   Column(
-                    children: _isLoading?[SpinKitDualRing(color: Colors.white,)]:[
-                       for(WooProductCategory category in parentCategory)
-                        if(category.name.toLowerCase()!='default category')
-                      ExpandingDrawerItem(title:category.name.split('&amp;').join(''),parentID:category.id,)
+                    children:[
+                       for(String category in parentCategories.keys)
+                      ExpandingDrawerItem(title:category,parentID:parentCategories[category],)
                     ],
                   ),
           DrawerItem(title: 'Wholesale',screen: WholesaleScreen(),),
@@ -106,9 +116,9 @@ class ExpandingDrawerItem extends StatefulWidget {
 
 class _ExpandingDrawerItemState extends State<ExpandingDrawerItem> {
   final WooCommerce woocommerce = WooCommerce(
-      baseUrl: 'https://revamp.baristasupplies.com.au/',
-      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
-      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
+      baseUrl: kBaseUrl,
+      consumerKey: kConsumerKey,
+      consumerSecret: kConsumerSecret,
       apiPath: '/wp-json/wc/v3/');
   List<WooProductCategory> subCategories=[];
   bool _isLoading=true;
@@ -142,8 +152,7 @@ class _ExpandingDrawerItemState extends State<ExpandingDrawerItem> {
               fontFamily: kDefaultFontFamily,
               fontWeight: FontWeight.bold,
               color: Colors.white,
-              //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
           children:_isLoading?[SpinKitPulse(color: Colors.white,)]:[
@@ -151,11 +160,11 @@ class _ExpandingDrawerItemState extends State<ExpandingDrawerItem> {
                   Container(
                 child: ListTile(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                ProductsListingScreen(title: category.name,categoryID:category.id)));
+                                ProductsListingScreen(title: category.name,categoryID:category.id)),(r)=>r.isFirst);
                   },
                   dense: true,
                   title: Text(
@@ -164,7 +173,7 @@ class _ExpandingDrawerItemState extends State<ExpandingDrawerItem> {
                       fontFamily: kDefaultFontFamily,
                       color: Colors.white,
                       fontWeight: FontWeight.normal,
-                      fontSize: 16,
+                      fontSize: getFontSize(context, -2),
                     ),
                   ),
                 ),
@@ -195,10 +204,9 @@ class DrawerItem extends StatelessWidget {
           fontFamily: kDefaultFontFamily,
           color: Colors.white,
           fontWeight: FontWeight.bold,
-          fontSize: 16,
+          fontSize: getFontSize(context, -2),
         ),
       ),
     );
   }
 }
-

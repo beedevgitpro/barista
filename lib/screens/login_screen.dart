@@ -1,6 +1,7 @@
 import 'package:barista/components/appbar.dart';
 import 'package:barista/components/navdrawer.dart';
 import 'package:barista/constants.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:barista/screens/landingScreen.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +12,11 @@ class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
-
 class _LoginScreenState extends State<LoginScreen> {
     final WooCommerce woocommerce = WooCommerce(
-      baseUrl: 'https://revamp.baristasupplies.com.au/',
-      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
-      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
+      baseUrl: kBaseUrl,
+      consumerKey: kConsumerKey,
+      consumerSecret: kConsumerSecret,
       );
   final _loginFormKey = GlobalKey<FormState>();
   final _registrationFormKey = GlobalKey<FormState>();
@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     validator: (value) {
                       if (value.isEmpty) return 'Required';
                       else if(RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$").hasMatch(value))
-                        return 'Enter a valid Email address';
+                        return 'Enter a valid Email Address';
                       else
                         return null;
                     },
@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(
                       fontFamily: kDefaultFontFamily,
                       color: Colors.black54,
-                      fontSize: 16,
+                      fontSize: getFontSize(context, -2),
                     ),
                   ),
                 ],
@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(
                   fontFamily: kDefaultFontFamily,
                   color: Colors.black,
-                  fontSize: 18,
+                  fontSize: getFontSize(context, 0),
                 ),
               ),
               onPressed: () {
@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(
                   fontFamily: kDefaultFontFamily,
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: getFontSize(context, 0),
                 ),
               ),
             ),
@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontFamily: kDefaultFontFamily,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 28,
+                      fontSize: getFontSize(context, 10),
                     ),
                   ),
                 ),
@@ -185,6 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           textInputAction: TextInputAction.next,
                           validator: (value) {
                             if (value.isEmpty) return 'Required';
+                            return null;
                           },
                           onFieldSubmitted: (value) {
                             //currentNode.unfocus();
@@ -226,6 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           validator: (value) {
                             if (value.isEmpty) return 'Required';
+                            return null;
                           },
                           cursorColor: kPrimaryColor,
                           textInputAction: TextInputAction.done,
@@ -291,7 +293,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: TextStyle(
                                   fontFamily: kDefaultFontFamily,
                                   color: Colors.white,
-                                  fontSize: 18,
+                                  fontSize: getFontSize(context, 0),
                                 ),
                               ),
                             ),
@@ -299,7 +301,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: TextStyle(
                                   color: kPrimaryColor,
                                   fontFamily: kDefaultFontFamily,
-                                  fontSize: 18,
+                                  fontSize: getFontSize(context, 0),
                                 ))
                           ],
                         ),
@@ -311,7 +313,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontFamily: kDefaultFontFamily,
-                                  fontSize: 18,
+                                  fontSize: getFontSize(context, 0),
                                 )),
                             GestureDetector(
                               onTap: () {
@@ -321,7 +323,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: TextStyle(
                                     color: kPrimaryColor,
                                     fontFamily: kDefaultFontFamily,
-                                    fontSize: 18,
+                                    fontSize: getFontSize(context, 0),
                                   )),
                             )
                           ],

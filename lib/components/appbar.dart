@@ -17,10 +17,15 @@ class BaristaAppBar extends StatelessWidget {
        size: isLarge?35:30), onPressed: (){
          Scaffold.of(context).openDrawer();
        },),
-              Image.asset(
-                'assets/images/logo.png',
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.center,
+              GestureDetector(
+                onTap: (){
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                },
+                              child: Image.asset(
+                  'assets/images/logo.png',
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.center,
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

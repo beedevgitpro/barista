@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:barista/components/appbar.dart';
 import 'package:barista/components/filter_ui.dart';
 import 'package:barista/components/navdrawer.dart';
 import 'package:barista/components/product_listing.dart';
 import 'package:barista/constants.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -21,9 +20,9 @@ class ProductsListingScreen extends StatefulWidget {
 
 class _ProductsListingScreenState extends State<ProductsListingScreen> {
   final WooCommerce woocommerce = WooCommerce(
-      baseUrl: 'https://revamp.baristasupplies.com.au/',
-      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
-      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
+      baseUrl: kBaseUrl,
+      consumerKey: kConsumerKey,
+      consumerSecret: kConsumerSecret,
       apiPath: '/wp-json/wc/v3/');
 
   final productListingScaffoldKey = GlobalKey<ScaffoldState>();
@@ -42,7 +41,6 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
   void initState() {
     start = min.toInt();
     end = max.toInt();
-    //getCategories();
     super.initState();
   }
   getCategories(){
@@ -96,7 +94,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 12.0),
                     child: _large
                         ? Row(
-                            //runAlignment: ,
+                            
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Padding(
@@ -119,7 +117,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                                       fontFamily: kDefaultFontFamily,
                                       color: Colors.black,
                                       fontWeight: FontWeight.normal,
-                                      fontSize: 22,
+                                      fontSize: getFontSize(context, 4),
                                     ),
                                   ),
                                   SizedBox(
@@ -135,7 +133,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                                                 fontFamily: kDefaultFontFamily,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.normal,
-                                                fontSize: 22,
+                                                fontSize: getFontSize(context, 4),
                                               ),
                                             ),
                                             value: '12'),
@@ -146,7 +144,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                                                 fontFamily: kDefaultFontFamily,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.normal,
-                                                fontSize: 22,
+                                                fontSize: getFontSize(context, 4),
                                               ),
                                             ),
                                             value: '24'),
@@ -157,7 +155,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                                                 fontFamily: kDefaultFontFamily,
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.normal,
-                                                fontSize: 22,
+                                                fontSize: getFontSize(context, 4),
                                               ),
                                             ),
                                             value: '36'),
@@ -259,41 +257,42 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                     stream: woocommerce.getProducts(perPage: int.parse(selectedNoOfItems),category: '${widget.categoryID}').asStream(),
                     builder: (context, snapshot) {
                       if (snapshot.data == null) {
-                        return Center(
-                          child:
-                              SpinKitFadingCube(size: 40, color: kPrimaryColor),
+                        return Container(
+                          height: _height*0.7,
+                          child: Center(
+                            child:
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SpinKitDualRing(size: 50, color: kPrimaryColor),
+                                ),
+                          ),
                         );
                       }
-                      print(snapshot.data.length);
-                      for (WooProduct product in snapshot.data) {
-                        print(product.name);
-                        // for (WooProductImage i in product.images)
-                        //   if (i != null) 
-                        //   print(i.src ?? 'lol');
-                      }
+                      
 
-                      return Wrap(
-                        //crossAxisAlignment: WrapCrossAlignment.center,
-                        alignment: WrapAlignment.spaceBetween,
-                        runSpacing: 10,
-                        spacing: 20,
+                      return Column(
                         children: [
-                          for (WooProduct product in snapshot.data)
-                            if (product.name != '')
-                              //if(product.price==null)
-                              if (product.images.isNotEmpty)
-                                ProductListing(
-                                    size: _large ? 200 : 180,
-                                    productName: product.name,
-                                    img: product.images[0].src,
-                                    price: product.price.toString(),
-                                    regularPrice:product.regularPrice.isEmpty?'0':product.regularPrice,
-                                    product: product,
-                                    )
-                        ],
-                      );
-                    }),
-                Padding(
+                          Wrap(
+                            //crossAxisAlignment: WrapCrossAlignment.center,
+                            alignment: WrapAlignment.spaceBetween,
+                            runSpacing: 10,
+                            spacing: 20,
+                            children: [
+                              for (WooProduct product in snapshot.data)
+                                if (product.name != '')
+                                  //if(product.price==null)
+                                  if (product.images.isNotEmpty)
+                                    ProductListing(
+                                        size: _large ? 200 : 180,
+                                        productName: product.name,
+                                        img: product.images[0].src,
+                                        price: product.price.toString(),
+                                        regularPrice:product.regularPrice.isEmpty?'0':product.regularPrice,
+                                        product: product,
+                                        )
+                            ],
+                          ),
+                          Padding(
                   padding: const EdgeInsets.symmetric(vertical: 30.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -310,7 +309,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                               fontFamily: kDefaultFontFamily,
                               color: Colors.white,
                               fontWeight: FontWeight.normal,
-                              fontSize: 22,
+                              fontSize: getFontSize(context, 4),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -329,7 +328,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                               fontFamily: kDefaultFontFamily,
                               color: Colors.white,
                               fontWeight: FontWeight.normal,
-                              fontSize: 22,
+                              fontSize: getFontSize(context, 4),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -338,6 +337,10 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                     ],
                   ),
                 ),
+                        ],
+                      );
+                    }),
+                
               ]),
             ),
           ),

@@ -1,10 +1,12 @@
 import 'package:barista/components/appbar.dart';
 import 'package:barista/components/navdrawer.dart';
-import 'package:barista/components/product_listing.dart';
 import 'package:barista/components/wishlist_item.dart';
 import 'package:barista/constants.dart';
+import 'package:barista/models/wishlist_model.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 class WishlistScreen extends StatefulWidget {
   @override
   _WishlistScreenState createState() => _WishlistScreenState();
@@ -31,7 +33,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
         ),
         backgroundColor: Colors.white,
         drawer: NavigationDrawer(),
-        body: SafeArea(child: SingleChildScrollView(
+        body: SafeArea(child: 
+        
+        SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
            children: [
@@ -49,16 +53,21 @@ class _WishlistScreenState extends State<WishlistScreen> {
                         ),
             SizedBox(height: 20,),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal:8.0),
-              child: Wrap(
-                  //crossAxisAlignment: WrapCrossAlignment.center,
-                  //alignment: WrapAlignment.spaceBetween,
-                  runSpacing: 10,
-                  spacing: 20,
-               children: [
-                   for (var i = 0; i < 5; i++) 
-                   WishlistItem(width: _large?_width*0.5:_width,title: '8oz Ivory Chai Sttoke usable Cup',)
-               ], 
+              padding: EdgeInsets.symmetric(horizontal:8.0),
+              child: Consumer<WishlistModel>(
+                             builder: (context, wishlist, child){
+                               return wishlist.isCartEmpty()?Center(
+                     child: Text('Your WishList is currently empty',style: TextStyle(
+                      fontFamily: kDefaultFontFamily, fontSize: getFontSize(context, -2)
+                     ),),
+                   ):Wrap(
+                    runSpacing: 10,
+                    spacing: 20,
+                 children: [
+                     for (Map item in wishlist.items) 
+                     WishlistItem(width: _large?_width*0.5:_width,productID: item['productID'])
+                 ], 
+                );} 
               ),
             ),
            ], 

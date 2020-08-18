@@ -1,4 +1,5 @@
 import 'package:barista/constants.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:flutter/material.dart';
 
 class ShippingTable extends StatelessWidget {
@@ -13,7 +14,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               fontWeight: FontWeight.bold,
-              fontSize: 18,
+              fontSize: getFontSize(context, 0),
             ),
           ),
           Text(
@@ -22,7 +23,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               fontWeight: FontWeight.bold,
-              fontSize: 18,
+              fontSize: getFontSize(context, 0),
             ),
           ),
           Text(
@@ -31,7 +32,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               fontWeight: FontWeight.bold,
-              fontSize: 18,
+              fontSize: getFontSize(context, 0),
             ),
           ),
         ]),
@@ -42,7 +43,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
           Text(
@@ -51,7 +52,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
           Text(
@@ -60,7 +61,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
         ]),
@@ -71,7 +72,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
           Text(
@@ -80,7 +81,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
           Text(
@@ -89,7 +90,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
         ]),
@@ -100,7 +101,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
           Text(
@@ -109,7 +110,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
           Text(
@@ -118,7 +119,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
         ]),
@@ -129,7 +130,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
           Text(
@@ -138,7 +139,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
           Text(
@@ -147,7 +148,7 @@ class ShippingTable extends StatelessWidget {
               fontFamily: kDefaultFontFamily,
               color: Colors.black,
               //fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: getFontSize(context, -2),
             ),
           ),
         ]),

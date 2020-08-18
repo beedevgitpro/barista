@@ -1,4 +1,5 @@
 import 'package:barista/constants.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:barista/screens/products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:woocommerce/models/products.dart';
@@ -31,18 +32,18 @@ class ProductListing extends StatelessWidget {
             ),
             Text(productName,style:TextStyle(
                       fontFamily: kDefaultFontFamily,
-                        color: kPrimaryColor, fontWeight: FontWeight.bold,fontSize:17,),textAlign: TextAlign.start,),
+                        color: kPrimaryColor, fontWeight: FontWeight.bold,fontSize: getFontSize(context, -1),),textAlign: TextAlign.start,),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical:10.0),
                           child: Row(
                             children: [
                               Text(double.parse(regularPrice)>double.parse(price)?'\$$regularPrice':'',style:TextStyle(
                       fontFamily: kDefaultFontFamily,
-                              color: Colors.black54, fontWeight: FontWeight.bold,fontSize:18,decoration: TextDecoration.lineThrough),),
+                              color: Colors.black54, fontWeight: FontWeight.bold,fontSize: getFontSize(context, 0),decoration: TextDecoration.lineThrough),),
                               SizedBox(width:2),
                               Text('\$$price',style:TextStyle(
                       fontFamily: kDefaultFontFamily,
-                              color: Colors.black, fontWeight: FontWeight.bold,fontSize:18,),),
+                              color: Colors.black, fontWeight: FontWeight.bold,fontSize: getFontSize(context, 0),),),
                             ],
                           ),
                         ),
@@ -50,7 +51,7 @@ class ProductListing extends StatelessWidget {
                           padding: EdgeInsets.symmetric(vertical:10.0),
                           child: Text('or 4 payments of \$5 with Afterpay',style:TextStyle(
                       fontFamily: kDefaultFontFamily,
-                                color: Colors.black54, fontWeight: FontWeight.normal,fontSize:16,)),
+                                color: Colors.black54, fontWeight: FontWeight.normal,fontSize: getFontSize(context, -2),)),
                         ),
               //           Padding(
               //             padding: EdgeInsets.symmetric(vertical:10.0,horizontal: 8),

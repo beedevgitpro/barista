@@ -1,7 +1,7 @@
 import 'package:barista/constants.dart';
 import 'package:barista/models/cart_model.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:woocommerce/woocommerce.dart';
 
@@ -18,18 +18,17 @@ class CartItem extends StatefulWidget {
 
 class _CartItemState extends State<CartItem> {
     final WooCommerce woocommerce = WooCommerce(
-      baseUrl: 'https://revamp.baristasupplies.com.au/',
-      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
-      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
+      baseUrl: kBaseUrl,
+      consumerKey: kConsumerKey,
+      consumerSecret: kConsumerSecret,
       apiPath: '/wp-json/wc/v3/');
   WooProduct product;
-  bool _loading=true;
+
     @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     woocommerce.getProductById(id: int.parse(widget.productID)).then((value) => setState((){
-      _loading=false;
+    
       product=value;}));
   }
   @override
@@ -61,7 +60,7 @@ class _CartItemState extends State<CartItem> {
                           fontFamily: kDefaultFontFamily,
                           color: kPrimaryColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 17,
+                          fontSize: getFontSize(context, -1),
                         ),
                       ),
                     ),
@@ -70,7 +69,7 @@ class _CartItemState extends State<CartItem> {
                     children: [
                       Text('\$${product.price}',style:TextStyle(
                         fontFamily: kDefaultFontFamily,
-                                color: Colors.black, fontSize:18,),),
+                                color: Colors.black, fontSize: getFontSize(context, 0),),),
                       SizedBox(width:widget.width*0.1),
                       Align(
                         alignment: Alignment.center,
@@ -80,7 +79,7 @@ class _CartItemState extends State<CartItem> {
                             fontFamily: kDefaultFontFamily,
                             color: product.stockStatus=='instock'?Colors.green:Colors.red,
                             //fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: getFontSize(context, -2),
                           ),
                         ),
                       ),
@@ -99,7 +98,7 @@ class _CartItemState extends State<CartItem> {
                             fontFamily: kDefaultFontFamily,
                             color: Colors.white,
                             //fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: getFontSize(context, -2),
                           ),
                         ),
                       ),
@@ -122,7 +121,7 @@ class _CartItemState extends State<CartItem> {
                         //     fontFamily: kDefaultFontFamily,
                         //     color: Colors.white,
                         //     //fontWeight: FontWeight.bold,
-                        //     fontSize: 16,
+                        //     fontSize: getFontSize(context, -2),
                         //   ),
                         // ),),
                       )
@@ -144,7 +143,7 @@ class _CartItemState extends State<CartItem> {
                             fontFamily: kDefaultFontFamily,
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            fontSize: getFontSize(context, 0),
                           ),),
                   IconButton(icon: Icon(Icons.keyboard_arrow_down), onPressed: (){
                   //decrementqty

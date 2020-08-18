@@ -1,11 +1,12 @@
 import 'package:barista/components/navdrawer.dart';
 import 'package:barista/constants.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:barista/screens/cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-typedef void setValue(String value);
-typedef void validationFunction(String value);
+typedef void SetValue(String value);
+typedef void ValidationFunction(String value);
 class ContactUsScreen extends StatefulWidget {
   @override
   _ContactUsScreenState createState() => _ContactUsScreenState();
@@ -14,6 +15,7 @@ class ContactUsScreen extends StatefulWidget {
 class _ContactUsScreenState extends State<ContactUsScreen>
     with SingleTickerProviderStateMixin {
      final _contactUsScaffoldKey=GlobalKey<ScaffoldState>();
+     final _enquiryFormKey=GlobalKey<FormState>();
   TabController _tabController;
   double _height;
   double _width;
@@ -25,10 +27,8 @@ class _ContactUsScreenState extends State<ContactUsScreen>
     'Returns': 'Returns',
     'Accounts': 'Accounts',
     'Wholesale': 'Wholesale',
-    'Other Enquiry': 'Other Enquiry',
-    'Tasmania': 'TAS',
-    'Victoria': 'VIC',
-    'Western Australia': 'WA'
+    'Other Enquiry': 'Other Enquiry'
+   
   };
    final orderNumberNode = FocusNode();
    final enquiryTypeNode = FocusNode();
@@ -120,13 +120,13 @@ class _ContactUsScreenState extends State<ContactUsScreen>
                               child: Text('Visit Us',
                                   style: TextStyle(
                                     color: kPrimaryColor,
-                                    fontSize: 18,
+                                    fontSize: getFontSize(context, 0),
                                   ))),
                           Tab(
                               child: Text('Enquire Now',
                                   style: TextStyle(
                                     color: kPrimaryColor,
-                                    fontSize: 18,
+                                    fontSize: getFontSize(context, 0),
                                   )))
                         ],
                         controller: _tabController,
@@ -141,155 +141,185 @@ class _ContactUsScreenState extends State<ContactUsScreen>
               ),
             ),),);}
 
-  Wrap buildEnquiryForm() {
-    return Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                        spacing: 20,
-                        runSpacing: 10,
-                        children: [
-                          buildCustomTextField(
-                              (value) {
-                                firstName = value;
-                              },
-                              'First Name',
-                              (value) {
-                                if (value.isEmpty) {
-                                  if (!errFlag) {
-                                    errFlag = true;
-                                    fNameNode.requestFocus();
+  Form buildEnquiryForm() {
+    return Form(
+      key: _enquiryFormKey,
+      autovalidate: autovalidate,
+          child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 20,
+                          runSpacing: 10,
+                          children: [
+                            buildCustomTextField(
+                                (value) {
+                                  firstName = value;
+                                },
+                                'First Name',
+                                (value) {
+                                  if (value.isEmpty) {
+                                    if (!errFlag) {
+                                      errFlag = true;
+                                      fNameNode.requestFocus();
+                                    }
+                                    return 'Required';
                                   }
-                                  return 'Required';
-                                }
-                              },
-                              fNameNode,
-                              lNameNode),
-                          buildCustomTextField(
-                              (value) {
-                                lastName = value;
-                              },
-                              'Last Name',
-                              (value) {
-                                if (value.isEmpty) {
-                                  if (!errFlag) {
-                                    errFlag = true;
-                                    lNameNode.requestFocus();
+                                },
+                                fNameNode,
+                                lNameNode),
+                            buildCustomTextField(
+                                (value) {
+                                  lastName = value;
+                                },
+                                'Last Name',
+                                (value) {
+                                  if (value.isEmpty) {
+                                    if (!errFlag) {
+                                      errFlag = true;
+                                      lNameNode.requestFocus();
+                                    }
+                                    return 'Required';
                                   }
-                                  return 'Required';
-                                }
-                              },
-                              lNameNode,
-                              emailNode),
-                              buildCustomTextField(
-                              (value) {
-                                email = value;
-                              },
-                              'Email Address',
-                              (value) {
-                                if (value.isEmpty) {
-                                  if (!errFlag) {
-                                    errFlag = true;
-                                    emailNode.requestFocus();
+                                },
+                                lNameNode,
+                                emailNode),
+                                buildCustomTextField(
+                                (value) {
+                                  email = value;
+                                },
+                                'Email Address',
+                                (value) {
+                                  if (value.isEmpty) {
+                                    if (!errFlag) {
+                                      errFlag = true;
+                                      emailNode.requestFocus();
+                                    }
+                                    return 'Required';
                                   }
-                                  return 'Required';
-                                }
-                              },
-                              emailNode,
-                              companyNameNode),
-                              buildCustomTextField(
-                              (value) {
-                                companyName = value;
-                              },
-                              'Company Name',
-                              (value) {
-                                if (value.isEmpty) {
-                                  if (!errFlag) {
-                                    errFlag = true;
-                                    companyNameNode.requestFocus();
+                                },
+                                emailNode,
+                                companyNameNode),
+                                buildCustomTextField(
+                                (value) {
+                                  companyName = value;
+                                },
+                                'Company Name',
+                                (value) {
+                                  if (value.isEmpty) {
+                                    if (!errFlag) {
+                                      errFlag = true;
+                                      companyNameNode.requestFocus();
+                                    }
+                                    return 'Required';
                                   }
-                                  return 'Required';
-                                }
-                              },
-                              companyNameNode,
-                              phoneNode),
-                               buildCustomTextField(
-                              (value) {
-                                phone = value;
-                              },
-                              'Phone Number',
-                              (value) {
-                                if (value.isEmpty) {
-                                  if (!errFlag) {
-                                    errFlag = true;
-                                    phoneNode.requestFocus();
+                                },
+                                companyNameNode,
+                                phoneNode),
+                                 buildCustomTextField(
+                                (value) {
+                                  phone = value;
+                                },
+                                'Phone Number',
+                                (value) {
+                                  if (value.isEmpty) {
+                                    if (!errFlag) {
+                                      errFlag = true;
+                                      phoneNode.requestFocus();
+                                    }
+                                    return 'Required';
                                   }
-                                  return 'Required';
-                                }
-                              },
-                              phoneNode,
-                              orderNumberNode,isNumber:true),
-                              buildCustomTextField(
-                              (value) {
-                                orderNumber = value;
-                              },
-                              'Order Number (If relevant)',
-                              (value) {
-                                return null;
-                              
-                              },
-                              orderNumberNode,
-                              null),
-                              Padding(
-                            padding: EdgeInsets.all(_large ? 0 : 8),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 5),
-                              width: _large ? _width * 0.4 : _width,
-                              child: DropdownButtonHideUnderline(
-                                child: ButtonTheme(
-                                  alignedDropdown: true,
-                                  child: DropdownButtonFormField(
-                                      hint: Text('Select Enquiry Type',
-                                          style: TextStyle(
-                                            fontFamily: kDefaultFontFamily,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 16,
-                                          )),
-                                      value: selectedType,
-                                      items: [
-                                        for (String enquiryType in enquiryTypes.keys)
-                                          DropdownMenuItem(
-                                              child: Text(enquiryType.toString(),
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        kDefaultFontFamily,
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    fontSize: 16,
-                                                  )),
-                                              value: enquiryTypes[enquiryType].toString())
-                                      ],
-                                      validator: (value) {
-                                        if (value == null) {
-                                          if (!errFlag) {
-                                            errFlag = true;
-                                            enquiryTypeNode.requestFocus();
-                                          }
-                                          return 'Selection required!';
+                                },
+                                phoneNode,
+                                orderNumberNode,isNumber:true),
+                                buildCustomTextField(
+                                (value) {
+                                  orderNumber = value;
+                                },
+                                'Order Number (If relevant)',
+                                (value) {
+                                  return null;
+                                
+                                },
+                                orderNumberNode,
+                                null),
+                                buildEnquiryTypeDropdown(),
+                                Padding(
+                                  padding:  EdgeInsets.all(8.0),
+                                  child: FlatButton(
+                                    onPressed: (){
+                                      if(_enquiryFormKey.currentState.validate())
+                                      {
+
+                                      }else{
+                                        autovalidate=true;
+                                      }
+                                    },
+                                    color: kPrimaryColor,
+                                    child: Padding(
+                                      padding:  EdgeInsets.symmetric(horizontal:12.0,vertical: 10),
+                                      child: Text('Send Message',style: TextStyle(fontFamily: kDefaultFontFamily,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: getFontSize(context, 0),),),
+                                    ),
+                                  ),
+                                )
+                          ],
+                      ),
+    );
+  }
+
+  Padding buildEnquiryTypeDropdown() {
+    return Padding(
+                          padding: EdgeInsets.all(_large ? 0 : 8),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            width: _large ? _width * 0.4 : _width,
+                            child: DropdownButtonHideUnderline(
+                              child: ButtonTheme(
+                                alignedDropdown: true,
+                                child: DropdownButtonFormField(
+                                    hint: Text('Select Enquiry Type',
+                                        style: TextStyle(
+                                          fontFamily: kDefaultFontFamily,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: getFontSize(context, -2),
+                                        )),
+                                    value: selectedType,
+                                    items: [
+                                      for (String enquiryType in enquiryTypes.keys)
+                                        DropdownMenuItem(
+                                            child: Text(enquiryType.toString(),
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      kDefaultFontFamily,
+                                                  color: Colors.black,
+                                                  fontWeight:
+                                                      FontWeight.normal,
+                                                  fontSize: getFontSize(context, -2),
+                                                )),
+                                            value: enquiryTypes[enquiryType].toString())
+                                    ],
+                                    validator: (value) {
+                                      if (value == null) {
+                                        if (!errFlag) {
+                                          errFlag = true;
+                                          enquiryTypeNode.requestFocus();
                                         }
-                                      },
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedType= value;
-                                          messageNode.requestFocus();
-                                        });
-                                      }),
-                                ),
+                                        return 'Selection required!';
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedType= value;
+                                        messageNode.requestFocus();
+                                      });
+                                    }),
                               ),
                             ),
                           ),
-                        ],
-                    );
+                        );
   }
 
   Column buildVisitUsTab() {
@@ -317,7 +347,7 @@ class _ContactUsScreenState extends State<ContactUsScreen>
                                         textAlign: TextAlign.justify,
                                         style: TextStyle(
                                           color: Colors.black54,
-                                          fontSize: 18,
+                                          fontSize: getFontSize(context, 0),
                                           fontFamily: kDefaultFontFamily,
                                         ),
                                       ))
@@ -337,7 +367,7 @@ class _ContactUsScreenState extends State<ContactUsScreen>
                                         textAlign: TextAlign.justify,
                                         style: TextStyle(
                                           color: Colors.black54,
-                                          fontSize: 18,
+                                          fontSize: getFontSize(context, 0),
                                           fontFamily: kDefaultFontFamily,
                                         ),
                                       ))
@@ -357,7 +387,7 @@ class _ContactUsScreenState extends State<ContactUsScreen>
                                         textAlign: TextAlign.justify,
                                         style: TextStyle(
                                           color: Colors.black54,
-                                          fontSize: 18,
+                                          fontSize: getFontSize(context, 0),
                                           fontFamily: kDefaultFontFamily,
                                         ),
                                       ))
@@ -377,7 +407,7 @@ class _ContactUsScreenState extends State<ContactUsScreen>
                                         textAlign: TextAlign.justify,
                                         style: TextStyle(
                                           color: Colors.black54,
-                                          fontSize: 18,
+                                          fontSize: getFontSize(context, 0),
                                           fontFamily: kDefaultFontFamily,
                                         ),
                                       ))
@@ -395,7 +425,7 @@ class _ContactUsScreenState extends State<ContactUsScreen>
                       ],
                     );
   }
-            Container buildCustomTextField(setValue setval, String labelText, validationFunction validator, FocusNode fNode, FocusNode nextNode,{bool isNumber=false}) {
+            Container buildCustomTextField(SetValue setval, String labelText, ValidationFunction validator, FocusNode fNode, FocusNode nextNode,{bool isNumber=false}) {
     return Container(
       width: _large ? _width * 0.4 : _width,
       padding: EdgeInsets.all(8),

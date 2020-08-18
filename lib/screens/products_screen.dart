@@ -1,17 +1,15 @@
 import 'package:barista/components/appbar.dart';
-import 'package:barista/components/filter_ui.dart';
 import 'package:barista/components/navdrawer.dart';
-import 'package:barista/components/product_listing.dart';
 import 'package:barista/components/shipping_table.dart';
 import 'package:barista/constants.dart';
 import 'package:barista/models/cart_model.dart';
+import 'package:barista/models/wishlist_model.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:woocommerce/models/products.dart';
 import 'package:woocommerce/woocommerce.dart';
-import 'package:html/dom_parsing.dart';
 import 'package:html/parser.dart' show parse;
 
 class ProductScreen extends StatefulWidget {
@@ -23,15 +21,17 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
    final WooCommerce woocommerce = WooCommerce(
-      baseUrl: 'https://revamp.baristasupplies.com.au/',
-      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
-      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
+      baseUrl: kBaseUrl,
+      consumerKey: kConsumerKey,
+      consumerSecret: kConsumerSecret,
       apiPath: '/wp-json/wc/v3/');
   double _height;
   double _width;
   double _pixelRatio;
   bool _large;
   bool _medium;
+  bool _addedToWishlist=false;
+  final _productScreenKey=GlobalKey<ScaffoldState>();
   WooProduct product;
   int qty=1;
   getShippingMethods(){
@@ -56,6 +56,7 @@ class _ProductScreenState extends State<ProductScreen> {
     _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
     return SafeArea(
       child: Scaffold(
+        key: _productScreenKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(75),
           child: BaristaAppBar(
@@ -65,6 +66,7 @@ class _ProductScreenState extends State<ProductScreen> {
         backgroundColor: Colors.white,
         drawer: NavigationDrawer(),
         body: SafeArea(
+          
             child: Padding(
           padding: EdgeInsets.all(0.0),
           child: SingleChildScrollView(
@@ -184,7 +186,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     fontFamily: kDefaultFontFamily,
                                     color: Colors.black,
                                     fontWeight: FontWeight.normal,
-                                    fontSize: 22,
+                                    fontSize: getFontSize(context, 4),
                                   ),
                                 ),
                               ),
@@ -210,6 +212,14 @@ class _ProductScreenState extends State<ProductScreen> {
                               EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                           onPressed: () {
                             Provider.of<CartModel>(context, listen: false).add(product.id.toString(), qty, product.price.toString());
+                            _productScreenKey.currentState.showSnackBar(SnackBar(behavior: SnackBarBehavior.floating,backgroundColor: kPrimaryColor,content:Text(
+                                'Item Added to Cart!',
+                                style: TextStyle(
+                                  fontFamily: kDefaultFontFamily,
+                                  color: Colors.white,
+                                  fontSize: getFontSize(context, 0),
+                                ),
+                              ) ,));
                           },
                           child: Row(
                             children: [
@@ -221,7 +231,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                   fontFamily: kDefaultFontFamily,
                                   color: Colors.white,
                                   
-                                  fontSize: 22,
+                                  fontSize: getFontSize(context, 4),
                                 ),
                               ),
                             ],
@@ -233,11 +243,22 @@ class _ProductScreenState extends State<ProductScreen> {
                 SizedBox(height:15),
                 FlatButton(
                   onPressed: () {
-                           
+                           Provider.of<WishlistModel>(context, listen: false).add(product.id.toString(), qty, product.price.toString());
+                           _productScreenKey.currentState.showSnackBar(SnackBar(behavior: SnackBarBehavior.floating,backgroundColor: kPrimaryColor,content:Text(
+                                'Item Added to Wishlist!',
+                                style: TextStyle(
+                                  fontFamily: kDefaultFontFamily,
+                                  color: Colors.white,
+                                  fontSize: getFontSize(context, 0),
+                                ),
+                              ) ,));
+                              setState(() {
+                                _addedToWishlist=!_addedToWishlist;
+                              });
                           },
                                   child: Row(
                     children: [
-                      Icon(Icons.favorite_border,color: Colors.black54),
+                      Icon(_addedToWishlist?Icons.favorite:Icons.favorite_border,color: kPrimaryColor),
                       SizedBox(width: 6,),
                       Text(
                                   'Add to Wishlist',
@@ -245,7 +266,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     fontFamily: kDefaultFontFamily,
                                     color: Colors.black,
                                     //fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                                    fontSize: getFontSize(context, 0),
                                   ),
                                 ),
                     ],
@@ -259,15 +280,15 @@ class _ProductScreenState extends State<ProductScreen> {
                                   fontFamily: kDefaultFontFamily,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: getFontSize(context, 0),
                                 ),
                               ),children: [
-                                // .replaceAll('<p>','').replaceAll('</p>','')
+                                
                                 Text(parse(product.description).outerHtml,style: TextStyle(
                                   fontFamily: kDefaultFontFamily,
                                   color: Colors.black,
-                                  //fontWeight: FontWeight.bold,
-                                  fontSize: 15,
+                                  
+                                  fontSize: getFontSize(context, -3),
                                 ),)
                               ],),
                               Divider(color: Colors.black54,height: 0,),
@@ -277,25 +298,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                   fontFamily: kDefaultFontFamily,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: getFontSize(context, 0),
                                 ),
                               ),children: [
                                 ShippingTable()
                               ],),
                               Divider(color: Colors.black54,height: 0,),
-                // ExpansionTile(title: Text(
-                //                 'Reviews',
-                //                 style: TextStyle(
-                //                   fontFamily: kDefaultFontFamily,
-                //                   color: Colors.black,
-                //                   fontWeight: FontWeight.bold,
-                //                   fontSize: 18,
-                //                 ),
-                //               ),
-                //               children: [
-                //                 for(WooProductReview review in product.)
-                //               ],
-                //               ),
                              
             ],
           ),

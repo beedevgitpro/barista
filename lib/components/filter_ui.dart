@@ -1,6 +1,3 @@
-import 'package:barista/components/appbar.dart';
-import 'package:barista/components/navdrawer.dart';
-import 'package:barista/components/product_listing.dart';
 import 'package:barista/constants.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +11,7 @@ class _FilterUIState extends State<FilterUI> {
   double _height;
   double _width;
   double _pixelRatio;
-  bool _isOpen = false;
+
   bool _large;
   bool _medium;
   double min = 0, max = 200;

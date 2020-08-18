@@ -24,8 +24,8 @@ class SplashScreen extends StatefulWidget {
         this.navigateAfterSeconds,
         this.title = const Text(''),
         this.backgroundColor = Colors.white,
-        this.styleTextUnderTheLoader = const TextStyle(
-            fontSize: 18.0,
+        this.styleTextUnderTheLoader =  const TextStyle(
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.black
         ),
@@ -45,12 +45,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    
     Timer(
         Duration(seconds: widget.seconds),
             () {
           if (widget.navigateAfterSeconds is String) {
-            // It's fairly safe to assume this is using the in-built material
-            // named route component
+            
             Navigator.of(context).pushReplacementNamed(widget.navigateAfterSeconds);
           } else if (widget.navigateAfterSeconds is Widget) {
             Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (BuildContext context) => widget.navigateAfterSeconds));

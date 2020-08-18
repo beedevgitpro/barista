@@ -3,9 +3,14 @@ import 'package:barista/components/category_card.dart';
 import 'package:barista/components/navdrawer.dart';
 import 'package:barista/components/product_listing.dart';
 import 'package:barista/constants.dart';
+import 'package:barista/models/cart_model.dart';
+import 'package:barista/models/wishlist_model.dart';
+import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
+import 'package:barista/screens/products_screen.dart';
+import 'package:barista/screens/productslistingscreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:woocommerce/models/products.dart';
 import 'package:woocommerce/woocommerce.dart';
@@ -17,9 +22,9 @@ class LandingScreen extends StatefulWidget {
 
 class _LandingScreenState extends State<LandingScreen> {
   final WooCommerce woocommerce = WooCommerce(
-      baseUrl: 'https://revamp.baristasupplies.com.au/',
-      consumerKey: 'ck_4625dea30b0c7207161329d3aaf2435b38da34ae',
-      consumerSecret: 'cs_e43af5c06ecb97a956af5fd44fafc0e65962d32c',
+      baseUrl: kBaseUrl,
+      consumerKey: kConsumerKey,
+      consumerSecret: kConsumerSecret,
       apiPath: '/wp-json/wc/v3/');
   double _height;
   double _width;
@@ -38,7 +43,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         //       SpinKitDualRing(size: 40, color: kPrimaryColor),
                         // );
                       }
-                      print(snapshot.data.length);
+                      // print(snapshot.data.length);
                       // for (WooProduct product in snapshot.data) {
                       //   for (WooProductItemAttribute attr in product.attributes) 
                       //   print(attr.name);
@@ -61,7 +66,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   fontFamily: kDefaultFontFamily,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: getFontSize(context, 0),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -74,7 +79,11 @@ class _LandingScreenState extends State<LandingScreen> {
                   children: [
                     for (WooProductCategory category in snapshot.data)
                             if(category.image!=null)
-                            CategoryCard(size:_large?225:200,src:category.image.src,categoryName: category.name,)
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductsListingScreen(categoryID: category.id,title: category.name,)));
+                              },
+                              child: CategoryCard(size:_large?225:200,src:category.image.src,categoryName: category.name,))
                   ],
                 ),
               ),
@@ -97,16 +106,9 @@ Widget justArrived(){
                     builder: (context, snapshot) {
                       if (snapshot.data == null) {
                         return Container();
-                        // return Center(
-                        //   child:
-                        //       SpinKitDualRing(size: 40, color: kPrimaryColor),
-                        // );
-                      }
-                      print(snapshot.data.length);
-                      for (WooProduct product in snapshot.data) {
-                        print(product.name);
                         
                       }
+                      
 
                       return Column(
                         children: [
@@ -118,7 +120,7 @@ Widget justArrived(){
                   fontFamily: kDefaultFontFamily,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: getFontSize(context, 0),
                 ),
                 textAlign: TextAlign.start,
               ),
@@ -126,6 +128,7 @@ Widget justArrived(){
                           Wrap(
                                       alignment: WrapAlignment.spaceEvenly,
           runSpacing: 10,
+          spacing: 10,
          children: [
            for (WooProduct product in snapshot.data)
            ProductListing(size: _large?200:180,img: product.images[0].src,price:'500',productName:product.name,regularPrice: '999',product: product,)
@@ -169,13 +172,6 @@ Widget featuredProducts(){
                       if (snapshot.data == null) {
                         return Container();
                       }
-                      print(snapshot.data.length);
-                      for (WooProduct product in snapshot.data) {
-                        print(product.name);
-                        // for (WooProductImage i in product.images)
-                        //   if (i != null) 
-                        //   print(i.src ?? 'lol');
-                      }
                       return Column(
                         children: [
                           Row(
@@ -189,7 +185,7 @@ Widget featuredProducts(){
                         fontFamily: kDefaultFontFamily,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: getFontSize(context, 0),
                       ),
                     ),
                    
@@ -234,6 +230,8 @@ Widget featuredProducts(){
   void initState() {
     SharedPreferences.getInstance().then((value) => prefs=value);
     super.initState();
+    Provider.of<CartModel>(context, listen: false).retrieveState();
+    Provider.of<WishlistModel>(context, listen: false).retrieveState();
   }
   @override
   Widget build(BuildContext context) {
