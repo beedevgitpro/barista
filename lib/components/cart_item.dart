@@ -78,7 +78,6 @@ class _CartItemState extends State<CartItem> {
                           style: TextStyle(
                             fontFamily: kDefaultFontFamily,
                             color: product.stockStatus=='instock'?Colors.green:Colors.red,
-                            //fontWeight: FontWeight.bold,
                             fontSize: getFontSize(context, -2),
                           ),
                         ),

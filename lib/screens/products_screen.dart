@@ -11,14 +11,12 @@ import 'package:provider/provider.dart';
 import 'package:woocommerce/models/products.dart';
 import 'package:woocommerce/woocommerce.dart';
 import 'package:html/parser.dart' show parse;
-
 class ProductScreen extends StatefulWidget {
   ProductScreen({this.product});
   final WooProduct product;
   @override
   _ProductScreenState createState() => _ProductScreenState();
 }
-
 class _ProductScreenState extends State<ProductScreen> {
    final WooCommerce woocommerce = WooCommerce(
       baseUrl: kBaseUrl,
@@ -66,7 +64,6 @@ class _ProductScreenState extends State<ProductScreen> {
         backgroundColor: Colors.white,
         drawer: NavigationDrawer(),
         body: SafeArea(
-          
             child: Padding(
           padding: EdgeInsets.all(0.0),
           child: SingleChildScrollView(
@@ -155,7 +152,6 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
                 Divider(color: Colors.black54),
                 Row(
-                  //mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
@@ -265,7 +261,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                   style: TextStyle(
                                     fontFamily: kDefaultFontFamily,
                                     color: Colors.black,
-                                    //fontWeight: FontWeight.bold,
                                     fontSize: getFontSize(context, 0),
                                   ),
                                 ),
@@ -303,8 +298,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               ),children: [
                                 ShippingTable()
                               ],),
-                              Divider(color: Colors.black54,height: 0,),
-                             
+                              Divider(color: Colors.black54,height: 0,),  
             ],
           ),
               )),

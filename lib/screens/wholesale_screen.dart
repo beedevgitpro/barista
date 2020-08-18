@@ -220,7 +220,7 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
                                 cursorColor: kPrimaryColor,
                                 textInputAction: TextInputAction.next,
                                 onFieldSubmitted: (value) {
-                                  //currentNode.unfocus();
+                                 
                                   streetNode.requestFocus();
                                 },
                                 decoration: InputDecoration(
