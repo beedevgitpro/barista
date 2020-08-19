@@ -42,11 +42,9 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
   final websiteNode = FocusNode();
   final stateNode = FocusNode();
   final bTypeNode = FocusNode();
-  double _height;
   double _width;
   double _pixelRatio;
   bool _large;
-  bool _medium;
   Map states = {
     'Australian Capital Territory': 'ACT',
     'Northern Territory': 'NT',
@@ -66,11 +64,9 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
-    _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
@@ -255,7 +251,7 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
                                   abn = value;
                                 },
                                 validator: (value) {
-                                  // if (value.isEmpty) return 'Required';
+                            
                                   return null;
                                 },
                                 inputFormatters: [

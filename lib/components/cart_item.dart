@@ -96,7 +96,6 @@ class _CartItemState extends State<CartItem> {
                           style: TextStyle(
                             fontFamily: kDefaultFontFamily,
                             color: Colors.white,
-                            //fontWeight: FontWeight.bold,
                             fontSize: getFontSize(context, -2),
                           ),
                         ),

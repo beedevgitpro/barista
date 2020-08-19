@@ -11,9 +11,7 @@ class _FilterUIState extends State<FilterUI> {
   double _height;
   double _width;
   double _pixelRatio;
-
   bool _large;
-  bool _medium;
   double min = 0, max = 200;
   int start, end;
   @override
@@ -28,7 +26,7 @@ class _FilterUIState extends State<FilterUI> {
     _width = MediaQuery.of(context).size.width;
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
-    _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
+
     return Container(
       
       decoration: BoxDecoration(

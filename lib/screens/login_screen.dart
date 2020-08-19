@@ -22,11 +22,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final _registrationFormKey = GlobalKey<FormState>();
   String email;
   String password;
-  double _height;
+
   double _width;
   double _pixelRatio;
   bool _large;
-  bool _medium;
   Future<void> _showMyDialog() async {
     return showDialog<void>(
       context: context,
@@ -137,11 +136,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
-    _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(

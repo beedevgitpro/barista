@@ -24,7 +24,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   double _height;
   double _width;
   double _pixelRatio;
-  bool _large, _medium;
+  bool _large;
   bool autovalidate = false, errFlag = false;
   int userID;
   final currentPasswordNode = FocusNode();
@@ -420,7 +420,6 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     _width = MediaQuery.of(context).size.width;
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
-    _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(

@@ -41,10 +41,9 @@ class _EditAddressState extends State<EditAddress> {
   String firstName,
       lastName,
       businessName,suburb,selectedState,streetAddress,postcode,phone,email;
-  double _height;
   double _width;
   double _pixelRatio;
-  bool _large,_medium;
+  bool _large;
   int userID;
   final WooCommerce woocommerce = WooCommerce(
       baseUrl: kBaseUrl,
@@ -57,11 +56,9 @@ class _EditAddressState extends State<EditAddress> {
   }
   @override
   Widget build(BuildContext context) {
-    _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
-    _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
     return SafeArea(
       child: Scaffold(
        appBar:PreferredSize(
@@ -206,6 +203,7 @@ class _EditAddressState extends State<EditAddress> {
                                             }
                                             return 'Selection required!';
                                           }
+                                          return null;
                                         },
                                         onChanged: (value) {
                                           setState(() {

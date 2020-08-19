@@ -40,7 +40,7 @@ class _ContactUsScreenState extends State<ContactUsScreen>
   final messageNode = FocusNode();
   List enquirySubject=['Sales','Returns','Accounts','Wholesale','Other Enquiry'];
   bool _large;
-  bool _medium;
+
   @override
   void initState() {
     super.initState();
@@ -54,7 +54,6 @@ class _ContactUsScreenState extends State<ContactUsScreen>
     _width = MediaQuery.of(context).size.width;
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
-    _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
     return SafeArea(
         child: Scaffold(
           key: _contactUsScaffoldKey,

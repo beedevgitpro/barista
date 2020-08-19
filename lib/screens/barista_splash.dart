@@ -35,8 +35,6 @@ class SplashScreen extends StatefulWidget {
       	this.gradientBackground
       }
       );
-
-
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -53,9 +51,9 @@ class _SplashScreenState extends State<SplashScreen> {
             
             Navigator.of(context).pushReplacementNamed(widget.navigateAfterSeconds);
           } else if (widget.navigateAfterSeconds is Widget) {
-            Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (BuildContext context) => widget.navigateAfterSeconds));
+            Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (BuildContext context) => widget.navigateAfterSeconds));
           } else {
-            throw new ArgumentError(
+            throw  ArgumentError(
                 'widget.navigateAfterSeconds must either be a String or Widget'
             );
           }
@@ -65,16 +63,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: new InkWell(
+      body:  InkWell(
         onTap: widget.onClick,
-        child:new Stack(
+        child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            new Container(
-              decoration: new BoxDecoration(
+             Container(
+              decoration:  BoxDecoration(
                 image: widget.imageBackground == null
                     ? null
-                    : new DecorationImage(
+                    :  DecorationImage(
                         fit: BoxFit.cover,
                         image: widget.imageBackground,
                       ),
@@ -82,23 +80,23 @@ class _SplashScreenState extends State<SplashScreen> {
                 color: widget.backgroundColor,
               ),
             ),
-            new Column(
+             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                new Expanded(
+                 Expanded(
                   flex: 2,
-                  child: new Container(
-                      child: new Column(
+                  child:  Container(
+                      child:  Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          new CircleAvatar(
+                           CircleAvatar(
                             backgroundColor: Colors.transparent,
-                            child: new Container(
+                            child:  Container(
                                 child: widget.image
                             ),
                             radius: widget.photoSize,
                           ),
-                          new Padding(
+                           Padding(
                             padding: const EdgeInsets.only(top: 10.0),
                           ),
                           widget.title
@@ -114,7 +112,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         color: widget.loaderColor,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
+                        padding:  EdgeInsets.only(top: 20.0),
                       ),
                       widget.loadingText
                     ],

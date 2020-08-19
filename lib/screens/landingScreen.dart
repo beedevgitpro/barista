@@ -7,7 +7,6 @@ import 'package:barista/models/cart_model.dart';
 import 'package:barista/models/wishlist_model.dart';
 import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
-import 'package:barista/screens/products_screen.dart';
 import 'package:barista/screens/productslistingscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,11 +25,9 @@ class _LandingScreenState extends State<LandingScreen> {
       consumerKey: kConsumerKey,
       consumerSecret: kConsumerSecret,
       apiPath: '/wp-json/wc/v3/');
-  double _height;
   double _width;
   double _pixelRatio;
   bool _large;
-  bool _medium;
   SharedPreferences prefs;
   Widget browseCategories() {
     return StreamBuilder(
@@ -235,11 +232,9 @@ Widget featuredProducts(){
   }
   @override
   Widget build(BuildContext context) {
-    _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
-    _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(

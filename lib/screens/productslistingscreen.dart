@@ -32,7 +32,6 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
   bool _isOpen = false;
   bool _large;
   var sheetController;
-  bool _medium;
   double min = 0, max = 200;
   int start, end;
   String selectedNoOfItems = '12';
@@ -56,7 +55,6 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
     _width = MediaQuery.of(context).size.width;
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
-    _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
     return SafeArea(
       child: Scaffold(
         key: productListingScaffoldKey,
@@ -273,14 +271,13 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                       return Column(
                         children: [
                           Wrap(
-                            //crossAxisAlignment: WrapCrossAlignment.center,
                             alignment: WrapAlignment.spaceBetween,
                             runSpacing: 10,
                             spacing: 20,
                             children: [
                               for (WooProduct product in snapshot.data)
                                 if (product.name != '')
-                                  //if(product.price==null)
+                                  
                                   if (product.images.isNotEmpty)
                                     ProductListing(
                                         size: _large ? 200 : 180,

@@ -9,12 +9,12 @@ class BaristaAppBar extends StatelessWidget {
       elevation: 0,
       automaticallyImplyLeading: false,
       flexibleSpace: Container(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.symmetric(vertical:10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(icon: Icon(Icons.menu,color: Color(0xff152f51),//Colors.black,
-       size: isLarge?35:30), onPressed: (){
+       size: isLarge?38:33), onPressed: (){
          Scaffold.of(context).openDrawer();
        },),
               GestureDetector(
@@ -32,9 +32,9 @@ class BaristaAppBar extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(icon: Icon(Icons.account_circle,color: Color(0xff152f51),//Colors.black,
-       size:isLarge?35:30), onPressed: (){}),
+       size:isLarge?38:33), onPressed: (){}),
                   IconButton(icon: Icon(Icons.shopping_basket,color: Color(0xff152f51),//Colors.black,
-       size: isLarge?35:30), onPressed: (){
+       size: isLarge?38:33), onPressed: (){
          Navigator.push(context, MaterialPageRoute(builder: (context)=>CartScreen()));
        })
                 ],

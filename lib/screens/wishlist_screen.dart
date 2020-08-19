@@ -13,18 +13,14 @@ class WishlistScreen extends StatefulWidget {
 }
 
 class _WishlistScreenState extends State<WishlistScreen> {
-  double _height;
   double _width;
   double _pixelRatio;
   bool _large;
-  bool _medium;
   @override
   Widget build(BuildContext context) {
-    _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
-    _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
     return SafeArea(
       child: Scaffold(
        appBar: PreferredSize(
@@ -34,7 +30,6 @@ class _WishlistScreenState extends State<WishlistScreen> {
         backgroundColor: Colors.white,
         drawer: NavigationDrawer(),
         body: SafeArea(child: 
-        
         SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
