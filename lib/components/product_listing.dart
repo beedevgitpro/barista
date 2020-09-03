@@ -53,30 +53,6 @@ class ProductListing extends StatelessWidget {
                       fontFamily: kDefaultFontFamily,
                                 color: Colors.black54, fontWeight: FontWeight.normal,fontSize: getFontSize(context, -2),)),
                         ),
-              //           Padding(
-              //             padding: EdgeInsets.symmetric(vertical:10.0,horizontal: 8),
-              //             child: Row(
-              //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //               children: [
-              //               Ink(
-              //                 decoration: ShapeDecoration(
-              // color: kPrimaryColor,
-              // shape: BeveledRectangleBorder(),),
-              //                 child: IconButton(icon: Icon(Icons.shopping_basket,color: Colors.white, size:22), onPressed: (){},color: kPrimaryColor,)),
-              //               SizedBox(width:3),
-              //               Ink(
-              //                 decoration: ShapeDecoration(
-              // color: Colors.black12,
-              // shape: BeveledRectangleBorder(),),
-              //                 child: IconButton(icon: Icon(Icons.favorite_border, size:22), onPressed: (){})),
-              //                 SizedBox(width:3),
-              //               Ink(
-              //                 decoration: ShapeDecoration(
-              // color: Colors.black12,
-              // shape: BeveledRectangleBorder(),),
-              //                 child: IconButton(icon: Icon(Icons.open_in_new, size:22), onPressed: (){}))
-              //             ],),
-              //           )
           ],
         ),
       ),

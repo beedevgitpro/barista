@@ -185,7 +185,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             return null;
                           },
                           onFieldSubmitted: (value) {
-                            //currentNode.unfocus();
                             FocusScope.of(context).nextFocus();
                           },
                           decoration: InputDecoration(
@@ -275,15 +274,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 catch(e){
                                   print(e);
                                 }
-                                
-                                // final myCart = await woocommerce.addToMyCart(quantity: 2.toString(), itemId: 17.toString());
-                                // print(myCart.price);
-                                // if (_loginFormKey.currentState.validate()){
-                                //   var token=await woocommerce.authenticateViaJWT(username: email, password: password);
-                                //   print(token.toString());
-                                  // final customer = woocommerce.loginCustomer(username: email, password: password);
-                                //   }
-                                //Submit form
                               },
                               child: Text(
                                 'Login',

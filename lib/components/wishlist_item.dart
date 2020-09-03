@@ -1,3 +1,4 @@
+import 'package:barista/components/snackBar.dart';
 import 'package:barista/constants.dart';
 import 'package:barista/models/cart_model.dart';
 import 'package:barista/models/wishlist_model.dart';
@@ -75,7 +76,7 @@ class _WishlistItemState extends State<WishlistItem> {
                        Align(
                           alignment: Alignment.center,
                           child: Text(
-                            '${product.stockStatus}'.toUpperCase(),
+                            product.stockStatus=='instock'?'In Stock':'Out of Stock',
                             style: TextStyle(
                               fontFamily: kDefaultFontFamily,
                               color: Colors.green,
@@ -96,6 +97,8 @@ class _WishlistItemState extends State<WishlistItem> {
                             EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                         onPressed: () {
                           Provider.of<CartModel>(context, listen: false).add(product.id.toString(), 1, product.price.toString());
+                          Provider.of<WishlistModel>(context,listen: false).deleteItem(product.id.toString());
+                          Scaffold.of(context).showSnackBar(buildSnackBar(context,'Added to Cart!'));
                         },
                         child: Text(
                           'Add to Cart',

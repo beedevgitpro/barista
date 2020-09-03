@@ -1,7 +1,9 @@
 import 'package:barista/constants.dart';
 import 'package:barista/models/cart_model.dart';
+import 'package:barista/models/wishlist_model.dart';
 import 'package:barista/responsive_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:woocommerce/woocommerce.dart';
 
@@ -23,12 +25,12 @@ class _CartItemState extends State<CartItem> {
       consumerSecret: kConsumerSecret,
       apiPath: '/wp-json/wc/v3/');
   WooProduct product;
-
+  bool _loading=true;
     @override
   void initState() {
     super.initState();
     woocommerce.getProductById(id: int.parse(widget.productID)).then((value) => setState((){
-    
+      _loading=false;
       product=value;}));
   }
   @override
@@ -40,9 +42,13 @@ class _CartItemState extends State<CartItem> {
             child: Container(
         width: widget.width,
         height: widget.width * 0.35,
-        child: Row(
+        child: _loading?
+        Center(
+         child:SpinKitDualRing(color: kPrimaryColor) 
+        )
+        :Row(
             children: [
-              Image.network(product.images[0].src,
+            Image.network(product.images[0].src,
                   //'https://www.baristasupplies.com.au/wp-content/uploads/2019/10/8oz-Ivory-Chai-Sttoke-Cup-300x300.jpg',
                   height: widget.width * 0.3,
                   width: widget.width * 0.3),
@@ -90,7 +96,10 @@ class _CartItemState extends State<CartItem> {
                       FlatButton(
                         color: kPrimaryColor,
                         padding: EdgeInsets.all(8),
-                        onPressed: () {},
+                        onPressed: () {
+                          Provider.of<CartModel>(context, listen: false).deleteItem(product.id.toString());
+                          Provider.of<WishlistModel>(context,listen: false).add(product.id.toString(),1,product.price);
+                        },
                         child: Text(
                           'Add to Wishlist',
                           style: TextStyle(
@@ -110,7 +119,7 @@ class _CartItemState extends State<CartItem> {
                         },
                         icon: Icon(
                           Icons.delete,
-                          color: Colors.grey,
+                          color: Colors.red,
                         ),
                         iconSize: 35,
                         // child: Text(

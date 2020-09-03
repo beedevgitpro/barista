@@ -64,7 +64,7 @@ class _ProductScreenState extends State<ProductScreen> {
           padding: EdgeInsets.all(0.0),
           child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding:  EdgeInsets.all(10.0),
                 child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

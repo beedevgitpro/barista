@@ -35,7 +35,7 @@ class BaristaAppBar extends StatelessWidget {
        size:isLarge?38:33), onPressed: (){}),
                   IconButton(icon: Icon(Icons.shopping_basket,color: Color(0xff152f51),//Colors.black,
        size: isLarge?38:33), onPressed: (){
-         Navigator.push(context, MaterialPageRoute(builder: (context)=>CartScreen()));
+         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>CartScreen()),(r)=>r.isFirst);
        })
                 ],
               ),

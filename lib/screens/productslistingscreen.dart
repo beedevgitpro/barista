@@ -7,6 +7,7 @@ import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:woocommerce/models/products.dart';
 import 'package:woocommerce/woocommerce.dart';
 
@@ -62,15 +63,20 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
             ? Container()
             : FloatingActionButton(
                 onPressed: () {
-                  sheetController = productListingScaffoldKey.currentState
-                      .showBottomSheet((context) => FilterUI());
-                  setState(() {
-                    _isOpen = true;
-                  });
-                  sheetController.closed.then((value) => setState(() {
-                        _isOpen = false;
-                        print('closed');
-                      }));
+                  Alert(
+                    style: AlertStyle(
+                     isCloseButton: false 
+                    ),
+                    context: context, title: 'Filters',content:FilterUI(),buttons: [
+                    DialogButton(child: Text('Apply Filters',style: TextStyle(
+                              fontFamily: kDefaultFontFamily,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: _large ? 20 : 18,
+                            )), onPressed: (){
+                              Navigator.pop(context);
+                            })
+                  ]).show();
                 },
                 child: Icon(_isOpen ?? false ? Icons.clear : Icons.tune),
                 backgroundColor: _isOpen ?? false ? Colors.red : kPrimaryColor,
@@ -96,7 +102,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                                padding: EdgeInsets.only(left: 10.0),
                                 child: Text(
                                   widget.title,
                                   style: TextStyle(
@@ -171,7 +177,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                                padding: EdgeInsets.only(left: 10.0),
                                 child: Text(
                                   widget.title,
                                   style: TextStyle(
@@ -343,6 +349,50 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
           ),
         ),
       ),
+    );
+  }
+  Container buildFilterUI() {
+    return Container(
+    
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal:10),
+     child:Column(
+       crossAxisAlignment: CrossAxisAlignment.center,
+       mainAxisAlignment: MainAxisAlignment.spaceAround,
+       children: [
+         Column(
+           children: [
+             Divider(color: Colors.black,thickness: 3,indent: _width*0.4,endIndent: _width*0.4,),
+             
+         Divider(color: Colors.black,thickness: 3,height: 1,indent: _width*0.4,endIndent: _width*0.4,),
+           ],
+         ),
+         Text('Filter by price',style: TextStyle(
+                          fontFamily: kDefaultFontFamily,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: _large ? 20 : 18,
+                        ),textAlign: TextAlign.start,),
+        
+          
+          RangeSlider(activeColor: kPrimaryColor,inactiveColor: Colors.blueGrey,values: RangeValues(start.toDouble(),end.toDouble()), labels: RangeLabels('$start', '$end'),onChanged:(value){
+            setState(() {
+              start=value.start.round();
+              end=value.end.round();
+              print('$start ' + '$end');
+            });
+          },min:min.toDouble(),max:max.toDouble()),
+        
+        Text('\$$start to \$$end',style: TextStyle(
+                          fontFamily: kDefaultFontFamily,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: _large ? 20 : 18,
+                        ),textAlign: TextAlign.center),
+                //         SizedBox(height:_height*0.02),
+                // FlatButton(onPressed: (){}, color: kPrimaryColor,child:),
+                // SizedBox(height: _height*0.03,),
+     ],) 
     );
   }
 }

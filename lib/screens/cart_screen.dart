@@ -47,7 +47,6 @@ class _CartScreenState extends State<CartScreen> {
      body: SafeArea(
             child: Column(
         children: [
-          
           Expanded(child: Consumer<CartModel>(
                 builder: (context, cart, child) {
                   return cart.isCartEmpty()?Center(
