@@ -235,7 +235,6 @@ class _ContactUsScreenState extends State<ContactUsScreen>
                                 'Order Number (If relevant)',
                                 (value) {
                                   return null;
-                                
                                 },
                                 orderNumberNode,
                                 null),

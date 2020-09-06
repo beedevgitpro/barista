@@ -16,7 +16,6 @@ class NavigationDrawer extends StatefulWidget {
   @override
   _NavigationDrawerState createState() => _NavigationDrawerState();
 }
-
 class _NavigationDrawerState extends State<NavigationDrawer> {
   final WooCommerce woocommerce = WooCommerce(
       baseUrl: kBaseUrl,

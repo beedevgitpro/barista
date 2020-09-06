@@ -97,13 +97,11 @@ Widget justArrived(){
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-         
              StreamBuilder(
                     stream: woocommerce.getProducts(orderBy: 'date',perPage: 15).asStream(),
                     builder: (context, snapshot) {
                       if (snapshot.data == null) {
                         return Container();
-                        
                       }
                       
 
@@ -253,7 +251,6 @@ Widget featuredProducts(){
                       height: 350.0,
                       child: Row(children: [
                         Expanded(flex: 2,child: imagePanel(
-                          
                               'https://www.baristasupplies.com.au/wp-content/uploads/2019/10/Milk-Pitchers-blue-.png',
                            () {}),),
                         Expanded(

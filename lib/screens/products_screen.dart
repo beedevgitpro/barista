@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:woocommerce/models/products.dart';
 import 'package:woocommerce/woocommerce.dart';
-import 'package:html/parser.dart' show parse;
+
 class ProductScreen extends StatefulWidget {
   ProductScreen({this.product});
   final WooProduct product;
@@ -93,7 +93,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  padding:  EdgeInsets.symmetric(vertical: 10.0),
                   child: Column(
                     children: [
                       Row(
@@ -171,7 +171,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             ),
                             Container(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                padding: EdgeInsets.symmetric(horizontal: 16),
                                 child: Text(
                                   '$qty',
                                   style: TextStyle(
@@ -202,10 +202,10 @@ class _ProductScreenState extends State<ProductScreen> {
                           color: kPrimaryColor,
                           padding:
                               EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                          onPressed: () {
+                          onPressed: (){
                             Provider.of<CartModel>(context, listen: false).add(product.id.toString(), qty, product.price.toString());
                             _productScreenKey.currentState.showSnackBar(SnackBar(behavior: SnackBarBehavior.floating,backgroundColor: kPrimaryColor,content:Text(
-                                'Item Added to Cart!',
+                                'Added to Cart!',
                                 style: TextStyle(
                                   fontFamily: kDefaultFontFamily,
                                   color: Colors.white,
@@ -216,13 +216,12 @@ class _ProductScreenState extends State<ProductScreen> {
                           child: Row(
                             children: [
                               Icon(Icons.shopping_basket,color: Colors.white,),
-                              SizedBox(width:8),
+                              SizedBox(width:9),
                               Text(
                                 'Add to Cart',
                                 style: TextStyle(
                                   fontFamily: kDefaultFontFamily,
                                   color: Colors.white,
-                                  
                                   fontSize: getFontSize(context, 4),
                                 ),
                               ),
@@ -237,7 +236,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   onPressed: () {
                            Provider.of<WishlistModel>(context, listen: false).add(product.id.toString(), qty, product.price.toString());
                            _productScreenKey.currentState.showSnackBar(SnackBar(behavior: SnackBarBehavior.floating,backgroundColor: kPrimaryColor,content:Text(
-                                'Item Added to Wishlist!',
+                                'Added to Wishlist!',
                                 style: TextStyle(
                                   fontFamily: kDefaultFontFamily,
                                   color: Colors.white,
@@ -275,10 +274,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                 ),
                               ),children: [
                                 
-                                Text(parse(product.description).outerHtml,style: TextStyle(
+                                Text(product.description,style: TextStyle(
                                   fontFamily: kDefaultFontFamily,
                                   color: Colors.black,
-                                  
                                   fontSize: getFontSize(context, -3),
                                 ),)
                               ],),

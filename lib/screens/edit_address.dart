@@ -289,7 +289,7 @@ class _EditAddressState extends State<EditAddress> {
                               Navigator.pop(context);
                             },
                             child: Padding(
-                            padding: const EdgeInsets.all(18.0),
+                            padding:  EdgeInsets.all(18.0),
                             child: Text('Back',style: TextStyle(
                                                               fontFamily:
                                                                   kDefaultFontFamily,
@@ -337,7 +337,7 @@ class _EditAddressState extends State<EditAddress> {
                           });
                         },
                         child: Padding(
-                        padding: const EdgeInsets.all(18.0),
+                        padding:  EdgeInsets.all(18.0),
                         child: Text('Save Address',style: TextStyle(
                                                           fontFamily:
                                                               kDefaultFontFamily,

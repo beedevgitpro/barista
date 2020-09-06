@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
   SnackBar buildSnackBar(context,snackBarText) {
     return SnackBar(
       backgroundColor: kPrimaryColor,content:Text(
-                                'Item Added to Cart!',
+                                snackBarText,
                                 style: TextStyle(
                                   fontFamily: kDefaultFontFamily,
                                   color: Colors.white,

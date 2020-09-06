@@ -7,6 +7,7 @@ import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 class WishlistScreen extends StatefulWidget {
   @override
   _WishlistScreenState createState() => _WishlistScreenState();

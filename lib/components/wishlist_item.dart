@@ -1,4 +1,4 @@
-import 'package:barista/components/snackBar.dart';
+import 'package:barista/components/custom_snackBar.dart';
 import 'package:barista/constants.dart';
 import 'package:barista/models/cart_model.dart';
 import 'package:barista/models/wishlist_model.dart';

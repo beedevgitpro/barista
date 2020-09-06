@@ -25,7 +25,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
       consumerKey: kConsumerKey,
       consumerSecret: kConsumerSecret,
       apiPath: '/wp-json/wc/v3/');
-
+  int _pageNo=1;
   final productListingScaffoldKey = GlobalKey<ScaffoldState>();
   double _height;
   double _width;
@@ -95,10 +95,9 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
               padding: EdgeInsets.all(5.0),
               child: Column(children: [
                 Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    padding: EdgeInsets.symmetric(vertical: 12.0),
                     child: _large
                         ? Row(
-                            
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Padding(
@@ -258,7 +257,7 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                   height: 10,
                 ),
                 StreamBuilder(
-                    stream: woocommerce.getProducts(perPage: int.parse(selectedNoOfItems),category: '${widget.categoryID}').asStream(),
+                    stream: woocommerce.getProducts(perPage: int.parse(selectedNoOfItems),category: '${widget.categoryID}',page: _pageNo).asStream(),
                     builder: (context, snapshot) {
                       if (snapshot.data == null) {
                         return Container(
@@ -272,8 +271,6 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                           ),
                         );
                       }
-                      
-
                       return Column(
                         children: [
                           Wrap(
@@ -283,7 +280,6 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                             children: [
                               for (WooProduct product in snapshot.data)
                                 if (product.name != '')
-                                  
                                   if (product.images.isNotEmpty)
                                     ProductListing(
                                         size: _large ? 200 : 180,
@@ -296,12 +292,18 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                             ],
                           ),
                           Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 30.0),
+                  padding:  EdgeInsets.symmetric(vertical: 30.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      if(_pageNo>1)
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          if(_pageNo>1)
+                          setState(() {
+                            _pageNo--;
+                          });
+                        },
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 8.0),
                           width: _large ? _width * 0.2 : _width * .28,
@@ -319,8 +321,14 @@ class _ProductsListingScreenState extends State<ProductsListingScreen> {
                         ),
                       ),
                       SizedBox(width: 15),
+                      if(snapshot.data.length==int.parse(selectedNoOfItems))
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          if(snapshot.data.length==int.parse(selectedNoOfItems))
+                            setState(() {
+                              _pageNo++;
+                            });
+                        },
                         child: Container(
                           width: _large ? _width * 0.2 : _width * .28,
                           padding: EdgeInsets.symmetric(vertical: 8.0),

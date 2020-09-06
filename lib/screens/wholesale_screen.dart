@@ -78,7 +78,7 @@ class _WholesaleScreenState extends State<WholesaleScreen> {
         body: GestureDetector(
             onPanDown: (_){
               //Focus.of(context).requestFocus(new FocusNode());
-              FocusScope.of(context).unfocus();
+              FocusScope.of(context).requestFocus(FocusNode());
             },
                   child: SafeArea(
             child: SingleChildScrollView(
