@@ -3,9 +3,11 @@ import 'package:barista/responsive_text.dart';
 import 'package:barista/screens/contact_us_screen.dart';
 import 'package:barista/screens/login_screen.dart';
 import 'package:barista/screens/my_account.dart';
+import 'package:barista/screens/myorders_screen.dart';
 import 'package:barista/screens/productslistingscreen.dart';
 import 'package:barista/screens/wholesale_screen.dart';
 import 'package:barista/screens/wishlist_screen.dart';
+import 'package:barista/utility/PrefHelper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,7 +46,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   void _isLoggedIn() {
     SharedPreferences.getInstance().then((value) {
       setState(() {
-        if(value.getBool('isLoggedIn')??false)
+        if(value.getBool(PrefHelper.PREF_LOGIN_STATUS)??false)
         isLoggedIn= true;
       else
         isLoggedIn= false;
@@ -93,17 +95,24 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             title: 'My Account',
             screen: isLoggedIn??false ? MyAccount() : LoginScreen(),
           ),
+          DrawerItem(title: 'My Orders',screen: MyOrdersScreen(),),
           DrawerItem(title: 'My Wishlist',screen: WishlistScreen(),),
           DrawerItem(title: 'Gift Cards'),
           // DrawerItem(title: 'Blogs'),
           DrawerItem(title: 'About us',screen:AboutUsScreen()),
           DrawerItem(title: 'Contact us',screen: ContactUsScreen(),),
           DrawerItem(title: 'Call us: 03 8288 2399'),
-          DrawerItem(title: isLoggedIn??false ?'Logout':'Login',screen: isLoggedIn??false ? LoginScreen() : LoginScreen()),
+          DrawerItem(title: isLoggedIn??false ?'Logout':'Login',screen: isLoggedIn==true? null: LoginScreen()),
         ]),
       ),
     );
   }
+  }
+
+  Widget logUserOut(BuildContext context) {
+   SharedPreferences.getInstance().then((value) => value.clear());
+   Navigator.push(
+       context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 class ExpandingDrawerItem extends StatefulWidget {
   ExpandingDrawerItem({this.title,this.parentID});
@@ -192,7 +201,7 @@ class DrawerItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        screen==null?launch('tel://0382882399'):Navigator.push(
+        screen==null?logUserOut(context):Navigator.push(
             context, MaterialPageRoute(builder: (context) => screen));
       },
       dense: true,
