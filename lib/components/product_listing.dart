@@ -18,7 +18,9 @@ class ProductListing extends StatelessWidget {
       width: size,
       child: GestureDetector(
         onTap:(){
-          Navigator.push(context, MaterialPageRoute(builder:(context)=>ProductScreen(product:product)));
+          Navigator.pushNamed(
+              context, ProductScreen.routeName,
+              arguments: product.id);
         },
               child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

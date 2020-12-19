@@ -2,9 +2,12 @@ import 'package:barista/components/appbar.dart';
 import 'package:barista/components/customLoader.dart';
 import 'package:barista/components/navdrawer.dart';
 import 'package:barista/constants.dart';
+import 'package:barista/response_models/login_response_model.dart';
 import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:barista/screens/landingScreen.dart';
+import 'package:barista/utility/PrefHelper.dart';
+import 'package:barista/utility/webservice.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -274,35 +277,68 @@ class _LoginScreenState extends State<LoginScreen> {
                                   if(_loginFormKey.currentState.validate())
                                   try{
                                     pr.show();
-                                    final token = await woocommerce.authenticateViaJWT(username: email, password: password);
-                                    if(token!=null)
-                                    {int userID=await woocommerce.fetchLoggedInUserId();
-                                    SharedPreferences.getInstance().then((value) {value.setInt('userID', userID);value.setBool('isLoggedIn', true);});
-                                    pr.hide();
-                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LandingScreen()), (route) => false);
+                                    //   final token = await woocommerce.authenticateViaJWT(username: email, password: password);
+
+                                    LoginResponseModel response =
+                                    await WebService.loginUser(
+                                        email, password);
+                                    if (response.token != null) {
+                                      //   int userID = response.data.id;
+                                      String name = response.userDisplayName;
+                                      SharedPreferences.getInstance()
+                                          .then((value) {
+                                        // value.setInt(
+                                        //     PrefHelper.PREF_USER_ID, userID);
+                                        value.setString(PrefHelper.PREF_USER_ID,
+                                            response.userId);
+                                        value.setString(
+                                            PrefHelper.PREF_USER_NAME, name);
+                                        value.setBool(
+                                            PrefHelper.PREF_LOGIN_STATUS, true);
+                                        value.setString(
+                                            PrefHelper.PREF_AUTH_TOKEN,
+                                            response.token);
+                                      });
+                                      pr.hide();
+                                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LandingScreen()), (route) => false);
+
                                     }
                                   }
                                   on WooCommerceError catch(e){
                                     pr.hide();
                                     print(e.code.split(' ')[1]);
-                                    Alert(context: context, title: e.code.split(' ')[1]=='invalid_username'?'Invalid Username':'Invalid Password',image: Image.asset('assets/images/logo.png'),style: AlertStyle(
-                                    isCloseButton: false,
-                                     titleStyle: TextStyle(
-                                       fontFamily: kDefaultFontFamily,
-                                    // color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: getFontSize(context, 4),
-                                     ) 
-                                    ),buttons: [DialogButton(color: kPrimaryColor,child: Text('CLOSE',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: kDefaultFontFamily,
-                                    color: Colors.white,
-                                    fontSize: getFontSize(context, 0),
-                                    ),
-                                    ), onPressed: (){
-                                      Navigator.of(context).pop();
-                                    })]).show();
+                                    Alert(
+                                        context: context,
+                                        title: e.code.split(' ')[1] ==
+                                            'invalid_username'
+                                            ? 'Invalid Username'
+                                            : 'Invalid Password',
+                                        image:
+                                        Image.asset('assets/images/logo.png'),
+                                        style: AlertStyle(
+                                            isCloseButton: false,
+                                            titleStyle: TextStyle(
+                                              // color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: getFontSize(context, 4),
+                                            )),
+                                        buttons: [
+                                          DialogButton(
+                                              color:
+                                              Theme.of(context).primaryColor,
+                                              child: Text(
+                                                'CLOSE',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                  getFontSize(context, 0),
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              })
+                                        ]).show();
                                   }
                                   else
                                   setState(() {

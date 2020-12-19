@@ -1,7 +1,17 @@
 import 'package:barista/constants.dart';
 import 'package:barista/models/cart_model.dart';
 import 'package:barista/models/wishlist_model.dart';
+import 'package:barista/providers/cart_provider.dart';
+import 'package:barista/providers/customer_provider.dart';
+import 'package:barista/providers/orders_provider.dart';
+import 'package:barista/providers/payment_provider.dart';
+import 'package:barista/providers/products_provider.dart';
+import 'package:barista/screens/cart_screen.dart';
+import 'package:barista/screens/checkoutScreen.dart';
 import 'package:barista/screens/landingScreen.dart';
+import 'package:barista/screens/myorders_screen.dart';
+import 'package:barista/screens/products_screen.dart';
+import 'package:barista/screens/trackorders_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -19,12 +29,17 @@ void main() {
 class BaristaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => WishlistModel(),
-          child: ChangeNotifierProvider(
-        create: (context) => CartModel(),
-        child:
-      MaterialApp(
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (ctx) => CartProvider()),
+          ChangeNotifierProvider(create: (ctx) => ProductsProvider()),
+          ChangeNotifierProvider(create: (ctx)=> WishlistModel(),),
+          ChangeNotifierProvider(create: (ctx)=> OrderProvider(),),
+          ChangeNotifierProvider(create: (ctx)=> CustomerProvider(),),
+          ChangeNotifierProvider(create: (ctx)=> PaymentProvider(),),
+
+        ],
+     child: MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         accentColor: kPrimaryColor,
@@ -41,7 +56,15 @@ class BaristaApp extends StatelessWidget {
         photoSize:150,
         loaderColor: kPrimaryColor
       ),
-  )),
+        routes: {
+        ProductScreen.routeName:(ctx)=>ProductScreen(),
+          CartScreen.routeName:(ctx) => CartScreen(),
+          MyOrdersScreen.routeName: (context) => MyOrdersScreen(),
+          TrackOrdersScreen.routeName: (context) => TrackOrdersScreen(),
+          CheckoutScreen.routeName:(context) => CheckoutScreen()
+
+        },
+  )
     );
   }
 }

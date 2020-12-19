@@ -1,5 +1,9 @@
+import 'package:barista/providers/cart_provider.dart';
 import 'package:barista/screens/cart_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'badge.dart';
 class BaristaAppBar extends StatelessWidget {
   BaristaAppBar({@required this.isLarge});
   final bool isLarge;
@@ -33,10 +37,20 @@ class BaristaAppBar extends StatelessWidget {
                 children: [
                   IconButton(icon: Icon(Icons.account_circle,color: Color(0xff152f51),//Colors.black,
        size:isLarge?38:33), onPressed: (){}),
-                  IconButton(icon: Icon(Icons.shopping_basket,color: Color(0xff152f51),//Colors.black,
-       size: isLarge?38:33), onPressed: (){
-         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>CartScreen()),(r)=>r.isFirst);
-       })
+
+                  Consumer<CartProvider>(
+                      child: IconButton(icon: Icon(Icons.shopping_basket,color: Color(0xff152f51),//Colors.black,
+                          size: isLarge?38:33), onPressed: (){
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>CartScreen()),(r)=>r.isFirst);
+                      }),
+                      builder: (ctx, cart, ch) =>
+                          Badge(
+                            child: ch,
+                            value: cart.getCartItems.length.toString() ?? '0',
+                            color: Colors.red,
+                            countColor: Colors.white,
+                          ))
+
                 ],
               ),
             ],

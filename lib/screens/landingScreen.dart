@@ -3,8 +3,9 @@ import 'package:barista/components/category_card.dart';
 import 'package:barista/components/navdrawer.dart';
 import 'package:barista/components/product_listing.dart';
 import 'package:barista/constants.dart';
-import 'package:barista/models/cart_model.dart';
+
 import 'package:barista/models/wishlist_model.dart';
+import 'package:barista/providers/cart_provider.dart';
 import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:barista/screens/productslistingscreen.dart';
@@ -15,6 +16,8 @@ import 'package:woocommerce/models/products.dart';
 import 'package:woocommerce/woocommerce.dart';
 
 class LandingScreen extends StatefulWidget {
+  static String routeName = "/LandingScreen";
+
   @override
   _LandingScreenState createState() => _LandingScreenState();
 }
@@ -225,7 +228,7 @@ Widget featuredProducts(){
   void initState() {
     SharedPreferences.getInstance().then((value) => prefs=value);
     super.initState();
-    Provider.of<CartModel>(context, listen: false).retrieveState();
+    Provider.of<CartProvider>(context, listen: false);
     Provider.of<WishlistModel>(context, listen: false).retrieveState();
   }
   @override
