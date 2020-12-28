@@ -8,6 +8,7 @@ import 'package:barista/providers/payment_provider.dart';
 import 'package:barista/providers/products_provider.dart';
 import 'package:barista/screens/cart_screen.dart';
 import 'package:barista/screens/checkoutScreen.dart';
+import 'package:barista/screens/forgetpassword_screen.dart';
 import 'package:barista/screens/landingScreen.dart';
 import 'package:barista/screens/my_account.dart';
 import 'package:barista/screens/myorders_screen.dart';
@@ -64,7 +65,7 @@ class BaristaApp extends StatelessWidget {
           MyOrdersScreen.routeName: (context) => MyOrdersScreen(),
           TrackOrdersScreen.routeName: (context) => TrackOrdersScreen(),
           CheckoutScreen.routeName:(context) => CheckoutScreen(),
-          MyAccount.routeName:(context) => MyAccount(),
+          ForgetPasswordScreen.routeName:(context)=>ForgetPasswordScreen(),
 
         },
   )

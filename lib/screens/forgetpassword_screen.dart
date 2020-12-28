@@ -14,19 +14,22 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:woocommerce/woocommerce.dart';
 
-class LoginScreen extends StatefulWidget {
-  static String routeName;
+import '../utility/webservice.dart';
+import '../utility/webservice.dart';
+
+class ForgetPasswordScreen extends StatefulWidget {
+    static var routeName = '/forgetpassword_screen';
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _ForgetPasswordScreenState createState() => _ForgetPasswordScreenState();
 }
-class _LoginScreenState extends State<LoginScreen> {
+class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     final WooCommerce woocommerce = WooCommerce(
       baseUrl: kBaseUrl,
       consumerKey: kConsumerKey,
       consumerSecret: kConsumerSecret,
       );
-  final _loginFormKey = GlobalKey<FormState>();
+  final _forgetpasswordFormKey = GlobalKey<FormState>();
   final _registrationFormKey = GlobalKey<FormState>();
   String email;
   String password;
@@ -168,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
-                      'Login',
+                      'Reset Password',
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontFamily: kDefaultFontFamily,
@@ -180,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 20),
                   Form(
-                    key: _loginFormKey,
+                    key: _forgetpasswordFormKey,
                     autovalidate: _autoValidate,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
@@ -229,46 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           SizedBox(height: 20),
-                          TextFormField(
-                            obscureText: true,
-                            onChanged: (value) {
-                              password = value;
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) return 'Please enter your Password';
-                              return null;
-                            },
-                            cursorColor: kPrimaryColor,
-                            textInputAction: TextInputAction.done,
-                            decoration: InputDecoration(
-                              hintText: 'Password',
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.red,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20),
+                          
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -277,45 +241,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 padding: EdgeInsets.symmetric(vertical:8,horizontal: 15),
                                 onPressed: () async{
                                   final pr=Loader(context);
-                                  if(_loginFormKey.currentState.validate())
+                                  if(_forgetpasswordFormKey.currentState.validate())
                                   try{
                                     pr.show();
-                                    //   final token = await woocommerce.authenticateViaJWT(username: email, password: password);
-
-                                    LoginResponseModel response =
-                                    await WebService.loginUser(
-                                        email, password);
-                                    if (response.token != null) {
-                                      //   int userID = response.data.id;
-                                      String name = response.userDisplayName;
-                                      SharedPreferences.getInstance()
-                                          .then((value) {
-                                        // value.setInt(
-                                        //     PrefHelper.PREF_USER_ID, userID);
-                                        value.setString(PrefHelper.PREF_USER_ID,
-                                            response.userId);
-                                        value.setString(
-                                            PrefHelper.PREF_USER_NAME, name);
-                                        value.setBool(
-                                            PrefHelper.PREF_LOGIN_STATUS, true);
-                                        value.setString(
-                                            PrefHelper.PREF_AUTH_TOKEN,
-                                            response.token);
-                                      });
-                                      pr.hide();
-                                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LandingScreen()), (route) => false);
-
-                                    }
-                                  }
-                                  on WooCommerceError catch(e){
-                                    pr.hide();
-                                    print(e.code.split(' ')[1]);
-                                    Alert(
+                                    await WebService.ForgetPasswordAPI(email: email).then((value){
+                                        Alert(
                                         context: context,
-                                        title: e.code.split(' ')[1] ==
-                                            'invalid_username'
-                                            ? 'Invalid Username'
-                                            : 'Invalid Password',
+                                        title: value.toString(),
                                         image:
                                         Image.asset('assets/images/logo.png'),
                                         style: AlertStyle(
@@ -340,6 +272,44 @@ class _LoginScreenState extends State<LoginScreen> {
                                               ),
                                               onPressed: () {
                                                 Navigator.of(context).pop();
+                                                pr.hide();
+                                              })
+                                        ]).show();
+                                  
+                                    });
+                                  
+                                  }
+                                  on WooCommerceError catch(e){
+                                    pr.hide();
+                                    print(e.code.split(' ')[1]);
+                                    Alert(
+                                        context: context,
+                                        title: WebService.message,
+                                        image:
+                                        Image.asset('assets/images/logo.png'),
+                                        style: AlertStyle(
+                                            isCloseButton: false,
+                                            titleStyle: TextStyle(
+                                              // color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: getFontSize(context, 4),
+                                            )),
+                                        buttons: [
+                                          DialogButton(
+                                              color:
+                                              Theme.of(context).primaryColor,
+                                              child: Text(
+                                                'CLOSE',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                  getFontSize(context, 0),
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                pr.hide();
                                               })
                                         ]).show();
                                   }
@@ -349,7 +319,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   });
                                 },
                                 child: Text(
-                                  'Login',
+                                  'Reset Password',
                                   style: TextStyle(
                                     fontFamily: kDefaultFontFamily,
                                     color: Colors.white,
@@ -357,42 +327,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                               ),
-                              InkWell(onTap: (){
-                                Navigator.pushNamed(context, ForgetPasswordScreen.routeName);
-                              },
-                                                              child: Text('Forgot Password?',
-                                    style: TextStyle(
-                                      color: kPrimaryColor,
-                                      fontFamily: kDefaultFontFamily,
-                                      fontSize: getFontSize(context, 0),
-                                    )),
-                              )
                             ],
                           ),
                           SizedBox(height: 20),
-                          if(false)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Don\'t have an account?',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: kDefaultFontFamily,
-                                    fontSize: getFontSize(context, 0),
-                                  )),
-                              GestureDetector(
-                                onTap: () {
-                                  _showMyDialog();
-                                },
-                                child: Text(' Register',
-                                    style: TextStyle(
-                                      color: kPrimaryColor,
-                                      fontFamily: kDefaultFontFamily,
-                                      fontSize: getFontSize(context, 0),
-                                    )),
-                              )
-                            ],
-                          )
                         ],
                       ),
                     ),

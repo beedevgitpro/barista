@@ -19,9 +19,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
+import '../constants.dart';
 import 'PrefHelper.dart';
 
 class WebService{
+  static String message;
 
 
   static Future<LoginResponseModel> loginUser(
@@ -331,8 +333,7 @@ class WebService{
             HttpHeaders.contentTypeHeader: 'application/json'
           }));
       if (response.statusCode == 200) {
-        customerDetailResponseModel =
-            CustomerDetailResponseModel.fromJson(response.data);
+        
       }
     } on DioError catch (error) {
       print(error.message);
@@ -341,5 +342,32 @@ class WebService{
     }
     return customerDetailResponseModel;
   }
+
+
+
+    static Future ForgetPasswordAPI({
+      String email}) async {
+    try {
+      var response = await Dio().post(kBaseUrl+'',
+          data: {"user_login": email,},
+          options: new Options(headers: {
+            HttpHeaders.contentTypeHeader: 'application/json'
+          }));
+      if (response.statusCode == 200) {
+            message=response.data[0]['message']);
+      }
+      else if(response.statusCode==401){
+          message=response.data[0]['message'];
+      }
+      else{
+         message=response.data[0]['message'];
+      }
+    } on DioError catch (error) {
+      print(error.message);
+     
+    }
+    return message;
+  }
+
 
 }
