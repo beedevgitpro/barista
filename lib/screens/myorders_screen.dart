@@ -20,7 +20,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _myOrderScreenKey,
-      appBar: AppBar(
+      /*appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
           'My Order\'s',
@@ -51,7 +51,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
               onPressed: () {},
             ),
           ],
-        ),
+        ),*/
         body: FutureBuilder(
             future: Provider.of<OrderProvider>(context, listen: false)
                 .fetchOrderDetails(),
