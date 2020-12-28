@@ -57,18 +57,18 @@ class GetCartResponseModel with ChangeNotifier {
       );
 
   Map<String, dynamic> toJson() => {
-        "key": key,
-        "product_id": productId,
-        "variation_id": variationId,
-        "quantity": quantity,
-        "data_hash": dataHash,
-        "line_subtotal": lineSubtotal,
-        "line_subtotal_tax": lineSubtotalTax,
-        "line_total": lineTotal,
-        "line_tax": lineTax,
-        "product_name": productName,
-        "product_title": productTitle,
-        "product_price": productPrice,
-        "product_image": productImage,
-      };
+    "key": key,
+    "product_id": productId,
+    "variation_id": variationId,
+    "quantity": quantity,
+    "data_hash": dataHash,
+    "line_subtotal": lineSubtotal,
+    "line_subtotal_tax": lineSubtotalTax,
+    "line_total": lineTotal,
+    "line_tax": lineTax,
+    "product_name": productName,
+    "product_title": productTitle,
+    "product_price": productPrice,
+    "product_image": productImage,
+  };
 }

@@ -19,113 +19,104 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  bool _isLoading = true;
   @override
   void initState() {
     super.initState();
+    fetchInitialData();
+  }
+
+  fetchInitialData() async{
+
+    await Provider.of<CartProvider>(context, listen: false)
+        .fetchCartDetails();
+    await Provider.of<CartProvider>(context, listen: false)
+        .getTotalAmount();
+
+    setState(() {
+      _isLoading = false;
+    });
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          'My Cart',
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: getFontSize(context, 8),
-              color: Colors.black),
-        ),
-        leading: IconButton(
-            icon: Icon(
-              Icons.keyboard_arrow_left,
-              color: Theme.of(context).accentColor,
-              size: 32,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            }),
-        actions: [
-          // IconButton(
-          //     icon: Icon(
-          //       Icons.close,
-          //       color: Colors.orange,
-          //       size: 24,
-          //     ),
-          //     onPressed: () {
-          //       Navigator.pop(context);
-          //     })
-        ],
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        backgroundColor: Color(0xFFF4F4F4),
-      ),
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              flex: 3,
-              child: Container(
-                color: Color(0xFFF4F4F4),
-                child: FutureBuilder(
-                  future: Provider.of<CartProvider>(context, listen: false)
-                      .fetchCartDetails(),
-                  builder: (ctx, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.data.length == 0) {
-                      return Container(
-                        child: Center(
-                          child: Text('Your Cart is Empty.'),
-                        ),
-                      );
-                    }
-                    var cartItemList = snapshot.data;
-                    return ListView.builder(
-                      itemCount: cartItemList.length,
-                      itemBuilder: (context, index) {
-                        return CartItem(cartItemList.keys.toList()[index],
-                            cartItemList.values.toList()[index]);
-                      },
-                    );
-                  },
-                ),
+        appBar: AppBar(
+          elevation: 0,
+          title: Text(
+            'My Cart',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: getFontSize(context, 8),
+                color: Colors.black),
+          ),
+          leading: IconButton(
+              icon: Icon(
+                Icons.keyboard_arrow_left,
+                color: Theme.of(context).accentColor,
+                size: 32,
               ),
-            ),
-            Consumer<CartProvider>(
-              builder: (key, cart, _) => Container(
-                  color: Color(0xFFF4F4F4),
-                  child: Column(
-                    children: [
-                      // Container(
-                      //   padding: const EdgeInsets.all(12.0),
-                      //   margin: EdgeInsets.symmetric(horizontal:32),
-                      //   child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     children: [
-                      //       Text('Selected Item',style: TextStyle(fontSize: getFontSize(context, 3)),),
-                      //       Text(' ',style: TextStyle(fontSize: getFontSize(context, 3)),)
-                      //
-                      //     ],),
-                      // ),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          actions: [
+            // IconButton(
+            //     icon: Icon(
+            //       Icons.close,
+            //       color: Colors.orange,
+            //       size: 24,
+            //     ),
+            //     onPressed: () {
+            //       Navigator.pop(context);
+            //     })
+          ],
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          backgroundColor: Color(0xFFF4F4F4),
+        ),
+        body:_isLoading?Center(child: CircularProgressIndicator(),) : Consumer<CartProvider>(
+            builder: (key, cart, _) {
+              var cartItemList = cart.getCartItems;
+              var totalsResponse = cart.getTotals;
+              return cart.getCartItems.length>0?
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                        flex: 3,
+                        child:
+                        Container(
+                            color: Color(0xFFF4F4F4),
+                            child:
 
-                      FutureBuilder(
-                          future:
-                          Provider.of<CartProvider>(context, listen: false)
-                              .getTotalAmount(),
-                          builder: (ctx, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            } else if (!snapshot.hasData) {
-                              return Container();
-                            }
-                            GetTotalResponseModel totalsResponse =
-                                snapshot.data;
+                            ListView.builder(
+                              itemCount: cartItemList.length,
+                              itemBuilder: (context, index) {
+                                return CartItem(cartItemList.keys.toList()[index],
+                                    cartItemList.values.toList()[index]);
+                              },
+                            )
 
-                            return Container(
+                        )
+                    ),
+                    Container(
+                        color: Color(0xFFF4F4F4),
+                        child: Column(
+                          children: [
+                            // Container(
+                            //   padding: const EdgeInsets.all(12.0),
+                            //   margin: EdgeInsets.symmetric(horizontal:32),
+                            //   child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //     children: [
+                            //       Text('Selected Item',style: TextStyle(fontSize: getFontSize(context, 3)),),
+                            //       Text(' ',style: TextStyle(fontSize: getFontSize(context, 3)),)
+                            //
+                            //     ],),
+                            // ),
+
+                            Container(
                               padding: const EdgeInsets.all(12.0),
                               margin: EdgeInsets.symmetric(horizontal: 32),
                               child: Column(
@@ -246,56 +237,63 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                 ],
                               ),
-                            );
-                          }),
+                            ),
 
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(CheckoutScreen.routeName);
-                        },
-                        child: Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 20),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              shape: BoxShape.rectangle,
-                              gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [Theme
-                                      .of(context)
-                                      .accentColor,
-                                    Theme
-                                        .of(context)
-                                        .accentColor
-                                  ])),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 20.0,
-                            horizontal: 20.0,
-                          ),
-                          child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              new Expanded(
-                                child: Text(
-                                  "ORDER NOW",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context)
+                                    .pushNamed(CheckoutScreen.routeName);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 32, vertical: 20),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    shape: BoxShape.rectangle,
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [Theme
+                                            .of(context)
+                                            .accentColor,
+                                          Theme
+                                              .of(context)
+                                              .accentColor
+                                        ])),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 20.0,
+                                  horizontal: 20.0,
+                                ),
+                                child: new Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    new Expanded(
+                                      child: Text(
+                                        "ORDER NOW",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-            )
-          ],
-        ),
-      ),
+                            ),
+                          ],
+                        )),
+
+                  ],
+                ),
+              ):
+              Container(
+                child: Center(
+                  child: Text('Your Cart is Empty.'),
+                ),
+              );
+            }
+        )
     );
   }
 }

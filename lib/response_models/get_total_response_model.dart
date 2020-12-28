@@ -23,19 +23,24 @@ class GetTotalResponseModel {
     this.totalTax,
   });
 
-  String subtotal;
-  double subtotalTax;
-  String shippingTotal;
-  double shippingTax;
-  double discountTotal;
-  int discountTax;
-  String cartContentsTotal;
-  double cartContentsTax;
-  String feeTotal;
-  int feeTax;
+  /*dynamic lineSubtotal;
+  dynamic lineSubtotalTax;
+  dynamic lineTotal;
+  dynamic lineTax;*/
+
+  dynamic subtotal;
+  dynamic subtotalTax;
+  dynamic shippingTotal;
+  dynamic shippingTax;
+  dynamic discountTotal;
+  dynamic discountTax;
+  dynamic cartContentsTotal;
+  dynamic cartContentsTax;
+  dynamic feeTotal;
+  dynamic feeTax;
   List<dynamic> feeTaxes;
-  String total;
-  int totalTax;
+  dynamic total;
+  dynamic totalTax;
 
   factory GetTotalResponseModel.fromJson(Map<String, dynamic> json) =>
       GetTotalResponseModel(
@@ -55,18 +60,18 @@ class GetTotalResponseModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "subtotal": subtotal,
-        "subtotal_tax": subtotalTax,
-        "shipping_total": shippingTotal,
-        "shipping_tax": shippingTax,
-        "discount_total": discountTotal,
-        "discount_tax": discountTax,
-        "cart_contents_total": cartContentsTotal,
-        "cart_contents_tax": cartContentsTax,
-        "fee_total": feeTotal,
-        "fee_tax": feeTax,
-        "fee_taxes": List<dynamic>.from(feeTaxes.map((x) => x)),
-        "total": total,
-        "total_tax": totalTax,
-      };
+    "subtotal": subtotal,
+    "subtotal_tax": subtotalTax,
+    "shipping_total": shippingTotal,
+    "shipping_tax": shippingTax,
+    "discount_total": discountTotal,
+    "discount_tax": discountTax,
+    "cart_contents_total": cartContentsTotal,
+    "cart_contents_tax": cartContentsTax,
+    "fee_total": feeTotal,
+    "fee_tax": feeTax,
+    "fee_taxes": List<dynamic>.from(feeTaxes.map((x) => x)),
+    "total": total,
+    "total_tax": totalTax,
+  };
 }
