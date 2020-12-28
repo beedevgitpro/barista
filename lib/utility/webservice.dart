@@ -70,7 +70,8 @@ class WebService{
           data: jsonData, options: new Options(headers: headersData));
 
       if (response.statusCode == 200) {
-        addToCartResponseModel = AddToCartResponseModel.fromJson(response.data);
+        print(response.toString());
+        addToCartResponseModel = AddToCartResponseModel.fromJson(jsonDecode(response.toString()));
         //  prefs.setString(PrefHelper.PREF_OFFLINE_CART_KEY, addToCartResponseModel.key);
       }
     } on DioError catch (error) {
@@ -80,6 +81,7 @@ class WebService{
     }
     return addToCartResponseModel;
   }
+
 
   static Future<bool> updateCartItem(
       UpdateCartItemRequestModel updateCartItemRequestModel) async {
@@ -117,7 +119,7 @@ class WebService{
   }
 
   static Future<Map<String, GetCartResponseModel>> getCartList() async {
-    Map<String, dynamic> responseMap;
+    dynamic responseMap;
     Map<String, GetCartResponseModel> cartMap = {};
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -128,7 +130,6 @@ class WebService{
         HttpHeaders.authorizationHeader:
         bearerToken == null ? null : 'Bearer $bearerToken',
         HttpHeaders.contentTypeHeader: 'application/json'
-
       };
 
       Dio dio = new Dio();
@@ -150,11 +151,13 @@ class WebService{
         //     print(el);
         // });
 
-        responseMap.forEach((key, value) {
-          GetCartResponseModel getCartResponseModel =
-          GetCartResponseModel.fromJson(value);
-          cartMap.putIfAbsent(key, () => getCartResponseModel);
-        });
+        if(responseMap.length>0){
+          responseMap.forEach((key, value) {
+            GetCartResponseModel getCartResponseModel =
+            GetCartResponseModel.fromJson(value);
+            cartMap.putIfAbsent(key, () => getCartResponseModel);
+          });
+        }
 
 
         // cartMap = AddToCartResponseModel.fromJson(response.data);
@@ -193,7 +196,6 @@ class WebService{
           }));
       if (response.statusCode == 200) {
         success = true;
-        await getCartList();
       }
     } on DioError catch (error) {
       print(error.message);

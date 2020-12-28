@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+
 import 'package:barista/components/appbar.dart';
 import 'package:barista/components/navdrawer.dart';
 import 'package:barista/constants.dart';
@@ -38,6 +41,8 @@ class _EditAddressState extends State<EditAddress> {
     'Victoria': 'VIC',
     'Western Australia': 'WA'
   };
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   String firstName,
       lastName,
       businessName,suburb,selectedState,streetAddress,postcode,phone,email;
@@ -53,14 +58,43 @@ class _EditAddressState extends State<EditAddress> {
   @override
   void initState() {
     super.initState();
+
+
+    if(widget.isBilling){
+      firstName = widget.customer.billing?.firstName??='';
+      lastName = widget.customer.billing?.lastName??='';
+      businessName = widget.customer.billing?.company??='';
+      suburb = widget.customer.billing?.city??='';
+      selectedState = widget.customer.billing?.state;
+      streetAddress = widget.customer.billing?.address1??='';
+      postcode = widget.customer.billing?.postcode??='';
+      phone = widget.customer.billing?.phone??='';
+      email = widget.customer.billing?.email??='';
+    }
+    else{
+      firstName = widget.customer.shipping?.firstName??='';
+      lastName = widget.customer.shipping?.lastName??='';
+      businessName = widget.customer.shipping?.company??='';
+      suburb = widget.customer.shipping?.city??='';
+      selectedState = widget.customer.shipping?.state;
+
+      print('SelectedState'+selectedState);
+      streetAddress = widget.customer.shipping?.address1??='';
+      postcode = widget.customer.shipping?.postcode??='';
+      phone = '';
+      email = '';
+    }
   }
   @override
   Widget build(BuildContext context) {
     _width = MediaQuery.of(context).size.width;
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
+
+
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
        appBar:PreferredSize(
           preferredSize: Size.fromHeight(75),
           child: BaristaAppBar(isLarge:_large),
@@ -91,7 +125,7 @@ class _EditAddressState extends State<EditAddress> {
                           spacing: 20,
                           runSpacing: 10,
                           children: [
-                            buildCustomTextField(widget.customer.billing.firstName,
+                            buildCustomTextField(firstName,
                                 (value) {
                                   firstName = value;
                                 },
@@ -107,7 +141,7 @@ class _EditAddressState extends State<EditAddress> {
                                 },
                                 fNameNode,
                                 lNameNode),
-                            buildCustomTextField(widget.customer.billing.lastName,
+                            buildCustomTextField(lastName,
                                 (value) {
                                   lastName = value;
                                 },
@@ -123,7 +157,7 @@ class _EditAddressState extends State<EditAddress> {
                                 },
                                 lNameNode,
                                 bNameNode),
-                            buildCustomTextField('',
+                            buildCustomTextField(businessName,
                                 (value) {
                                   businessName = value;
                                 },
@@ -132,7 +166,7 @@ class _EditAddressState extends State<EditAddress> {
                                 bNameNode,
                                 streetNode),
                             
-                            buildCustomTextField(widget.customer.billing.address1,
+                            buildCustomTextField(streetAddress,
                                 (value) {
                                   streetAddress = value;
                                 },
@@ -148,7 +182,7 @@ class _EditAddressState extends State<EditAddress> {
                                 },
                                 streetNode,
                                 suburbNode),
-                            buildCustomTextField(widget.customer.billing.city,
+                            buildCustomTextField(suburb,
                                 (value) {
                                   suburb = value;
                                 },
@@ -180,7 +214,8 @@ class _EditAddressState extends State<EditAddress> {
                                               fontWeight: FontWeight.normal,
                                               fontSize: getFontSize(context, -2),
                                             )),
-                                        value: selectedState,
+                                        value: selectedState.isEmpty?null:selectedState,
+
                                         items: [
                                           for (String state in states.keys)
                                             DropdownMenuItem(
@@ -226,7 +261,7 @@ class _EditAddressState extends State<EditAddress> {
                                   //currentNode.unfocus();
                                   postcodeNode.unfocus();
                                 },
-                                initialValue: widget.customer.billing.postcode,
+                                initialValue: postcode,
                                 focusNode: postcodeNode,
                                 decoration: InputDecoration(
                                   labelText: 'Postcode',
@@ -305,36 +340,49 @@ class _EditAddressState extends State<EditAddress> {
                       child: FlatButton(
                         color: kPrimaryColor,
                         onPressed: ()async{
+                          print(widget.customer.id);
                           if(_addressFormKey.currentState.validate())
-                          await woocommerce.updateCustomer(id: widget.customer.id,data:{
-                            if(widget.isBilling)...{"billing": {
-                                "first_name": firstName,
+                            {
+                              var dataMap = {
+                                if(widget.isBilling)...{"billing": {
+                                  "first_name": firstName,
                                   "last_name":lastName,
-    "company": businessName,
-    "address_1": streetAddress,
-    "address_2": "",
-    "city": suburb,
-    "state": selectedState,
-    "postcode": postcode,
-    "country": "US",
-    "email": "john.doe@example.com",
-    "phone": phone
-                          }}else...{
-                            "shipping": {
-                                "first_name": firstName,
-                                  "last_name":lastName,
-    "company": businessName,
-    "address_1": streetAddress,
-    "address_2": "",
-    "city": suburb,
-    "state": selectedState,
-    "postcode": postcode,
-    "country": "US",
-    "email": "john.doe@example.com",
-    "phone": phone
-                          }
-                          }
-                          });
+                                  "company": businessName,
+                                  "address_1": streetAddress,
+                                  "address_2": "",
+                                  "city": suburb,
+                                  "state": selectedState,
+                                  "postcode": postcode,
+                                  "country": "US",
+                                  "email": email,
+                                  "phone": phone
+                                }}else...{
+                                  "shipping": {
+                                    "first_name": firstName,
+                                    "last_name":lastName,
+                                    "company": businessName,
+                                    "address_1": streetAddress,
+                                    "address_2": "",
+                                    "city": suburb,
+                                    "state": selectedState,
+                                    "postcode": postcode,
+                                    "country": "US",
+                                    "email": email,
+                                    "phone": phone
+                                  }
+                                }
+                              };
+                              print(jsonEncode(dataMap));
+                             var result =  await woocommerce.updateCustomer(id: widget.customer.id,data:dataMap);
+                             if(result!=null){
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Address Updated Successfully.')));
+                             }
+                             else{
+                               _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Address update failed.')));
+                             }
+
+                            }
+
                         },
                         child: Padding(
                         padding:  EdgeInsets.all(18.0),

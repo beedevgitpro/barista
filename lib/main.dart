@@ -9,6 +9,7 @@ import 'package:barista/providers/products_provider.dart';
 import 'package:barista/screens/cart_screen.dart';
 import 'package:barista/screens/checkoutScreen.dart';
 import 'package:barista/screens/landingScreen.dart';
+import 'package:barista/screens/my_account.dart';
 import 'package:barista/screens/myorders_screen.dart';
 import 'package:barista/screens/products_screen.dart';
 import 'package:barista/screens/trackorders_screen.dart';
@@ -38,6 +39,7 @@ class BaristaApp extends StatelessWidget {
           ChangeNotifierProvider(create: (ctx)=> CustomerProvider(),),
           ChangeNotifierProvider(create: (ctx)=> PaymentProvider(),),
 
+
         ],
      child: MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -61,7 +63,8 @@ class BaristaApp extends StatelessWidget {
           CartScreen.routeName:(ctx) => CartScreen(),
           MyOrdersScreen.routeName: (context) => MyOrdersScreen(),
           TrackOrdersScreen.routeName: (context) => TrackOrdersScreen(),
-          CheckoutScreen.routeName:(context) => CheckoutScreen()
+          CheckoutScreen.routeName:(context) => CheckoutScreen(),
+          MyAccount.routeName:(context) => MyAccount(),
 
         },
   )

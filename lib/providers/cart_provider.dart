@@ -72,7 +72,8 @@ class CartProvider with ChangeNotifier {
     var value = await WebService.addToCart(addToCartRequestModel);
 
     if (value != null) {
-      //await fetchCartDetails();
+      await fetchCartDetails();
+      await getTotalAmount();
       notifyListeners();
       return true;
     }
@@ -112,6 +113,7 @@ class CartProvider with ChangeNotifier {
 
     if (value) {
       await fetchCartDetails();
+      await getTotalAmount();
       notifyListeners();
       return true;
     }
@@ -149,6 +151,10 @@ class CartProvider with ChangeNotifier {
 
   Future<bool> removeCart(CartDeleteRequestModel cartDeleteRequestModel) async {
     var result = await WebService.removeCartItem(cartDeleteRequestModel);
+    if(result){
+      await fetchCartDetails();
+      await getTotalAmount();
+    }
     notifyListeners();
     return result;
   }

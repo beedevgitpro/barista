@@ -230,6 +230,11 @@ Widget featuredProducts(){
     super.initState();
     Provider.of<CartProvider>(context, listen: false);
     Provider.of<WishlistModel>(context, listen: false).retrieveState();
+    getCartDetails();
+  }
+
+  getCartDetails() async {
+    await Provider.of<CartProvider>(context, listen: false).fetchCartDetails();
   }
   @override
   Widget build(BuildContext context) {

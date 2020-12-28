@@ -95,7 +95,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             title: 'My Account',
             screen: isLoggedIn??false ? MyAccount() : LoginScreen(),
           ),
-          DrawerItem(title: 'My Orders',screen: MyOrdersScreen(),),
+        //  DrawerItem(title: 'My Orders',screen: MyOrdersScreen(),),
           DrawerItem(title: 'My Wishlist',screen: WishlistScreen(),),
           DrawerItem(title: 'Gift Cards'),
           // DrawerItem(title: 'Blogs'),

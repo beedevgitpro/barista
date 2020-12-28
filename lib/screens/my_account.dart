@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:barista/components/appbar.dart';
 import 'package:barista/components/navdrawer.dart';
 import 'package:barista/constants.dart';
 import 'package:barista/responsive_text.dart';
 import 'package:barista/responsive_ui.dart';
 import 'package:barista/screens/edit_address.dart';
+import 'package:barista/screens/myorders_screen.dart';
+import 'package:barista/utility/PrefHelper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -14,6 +18,9 @@ typedef void SetValue(String value);
 typedef void ValidationFunction(String value);
 
 class MyAccount extends StatefulWidget {
+  static var routeName ='/MyAccount';
+
+
   @override
   _MyAccountState createState() => _MyAccountState();
 }
@@ -28,10 +35,12 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   bool autovalidate = false, errFlag = false;
   int userID;
   final currentPasswordNode = FocusNode();
+  final newPasswordNode = FocusNode();
+  final confirmPasswordNode = FocusNode();
   final enquiryTypeNode = FocusNode();
   final fNameNode = FocusNode();
   final lNameNode = FocusNode();
-  final displayNameNode = FocusNode();
+ // final displayNameNode = FocusNode();
   final phoneNode = FocusNode();
   final emailNode = FocusNode();
   final messageNode = FocusNode();
@@ -43,8 +52,9 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   TextEditingController  lastNameController=TextEditingController();
   TextEditingController  currentPasswordController=TextEditingController();
   TextEditingController  confirmPasswordController=TextEditingController();
-  TextEditingController  displayNameController=TextEditingController();
+ // TextEditingController  displayNameController=TextEditingController();
   String selectedType = 'Sales';
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final WooCommerce woocommerce = WooCommerce(
     baseUrl: kBaseUrl,
     consumerKey: kConsumerKey,
@@ -84,7 +94,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => EditAddress(isBilling: false,customer: customer,)));
+                                    builder: (context) => EditAddress(isBilling: true,customer: customer,)));
                           })
                     ],
                   ),
@@ -191,192 +201,154 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   Widget buildAccountDetailsForm() {
     return _loading?
     Center(child: SpinKitDualRing(color: kPrimaryColor,size:40))
-    :Form(
-      key: _accountDetailsFormKey,
-      autovalidate: autovalidate,
-      child: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        spacing: 20,
-        runSpacing: 10,
-        children: [
-          buildCustomTextField(
-              
-                firstNameController
-              ,
-              'First Name',
-              (value) {
-                if (value.isEmpty) {
-                  if (!errFlag) {
-                    errFlag = true;
-                    fNameNode.requestFocus();
+    :SingleChildScrollView(
+      child: Form(
+        key: _accountDetailsFormKey,
+        autovalidate: autovalidate,
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 20,
+          runSpacing: 10,
+          children: [
+            buildCustomTextField(
+                
+                  firstNameController
+                ,
+                'First Name',
+                (value) {
+                  if (value.isEmpty) {
+                    if (!errFlag) {
+                      errFlag = true;
+                      fNameNode.requestFocus();
+                    }
+                    return 'Required';
                   }
-                  return 'Required';
-                }
-              },
-              fNameNode,
-              lNameNode),
-          buildCustomTextField(
-             
-                lastNameController,
-              'Last Name',
-              (value) {
-                if (value.isEmpty) {
-                  if (!errFlag) {
-                    errFlag = true;
-                    lNameNode.requestFocus();
+                },
+                fNameNode,
+                lNameNode),
+            buildCustomTextField(
+               
+                  lastNameController,
+                'Last Name',
+                (value) {
+                  if (value.isEmpty) {
+                    if (!errFlag) {
+                      errFlag = true;
+                      lNameNode.requestFocus();
+                    }
+                    return 'Required';
                   }
-                  return 'Required';
-                }
-              },
-              lNameNode,
-              emailNode),
-          buildCustomTextField(
-            emailController,
-              'Email Address',
-              (value) {
-                if (value.isEmpty) {
-                  if (!errFlag) {
-                    errFlag = true;
-                    emailNode.requestFocus();
+                },
+                lNameNode,
+                emailNode),
+            buildCustomTextField(
+              emailController,
+                'Email Address',
+                (value) {
+                  if (value.isEmpty) {
+                    if (!errFlag) {
+                      errFlag = true;
+                      emailNode.requestFocus();
+                    }
+                    return 'Required';
                   }
-                  return 'Required';
-                }
-              },
-              emailNode,
-              displayNameNode),
-          buildCustomTextField(
-              
-                displayNameController,
-              'Display Name',
-              (value) {
-                if (value.isEmpty) {
-                  if (!errFlag) {
-                    errFlag = true;
-                    displayNameNode.requestFocus();
+                },
+                emailNode,
+                null),
+           /* buildCustomTextField(
+                
+                  displayNameController,
+                'Display Name',
+                (value) {
+                  if (value.isEmpty) {
+                    if (!errFlag) {
+                      errFlag = true;
+                      displayNameNode.requestFocus();
+                    }
+                    return 'Required';
                   }
-                  return 'Required';
-                }
-              },
-              displayNameNode,
-              phoneNode),
-          buildCustomTextField(
-                currentPasswordController ,
-              'Current Password',
-              (value) {
-                if(currentPasswordController.text.isNotEmpty && newPasswordController.text.isEmpty)
-                  return 'Please confirm the new Password';
-                else if(confirmPasswordController.text !=newPasswordController.text)
-                  return 'Confirm Password & Password fields must match';
-                return null;
-              },
-              phoneNode,
-              currentPasswordNode),
-          buildCustomTextField(
-                newPasswordController,
-              'New Password',
-              (value) {
-                return null;
-              },
-              currentPasswordNode,
-              null),
-          buildCustomTextField(
-              
-                confirmPasswordController,
-              'Confirm New Password',
-              (value) {
-                if(newPasswordController.text.isNotEmpty && confirmPasswordController.text.isEmpty)
-                  return 'Please confirm the new Password';
-                return null;
-              },
-              currentPasswordNode,
-              null),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: FlatButton(
-              onPressed: () {
-                if (_accountDetailsFormKey.currentState.validate()) {
-                } else {
-                  autovalidate = true;
-                }
-              },
-              color: kPrimaryColor,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
-                child: Text(
-                  'Save Changes',
-                  style: TextStyle(
-                    fontFamily: kDefaultFontFamily,
-                    color: Colors.white,
-                    fontWeight: FontWeight.normal,
-                    fontSize: getFontSize(context, 0),
+                },
+                displayNameNode,
+                phoneNode),*/
+            buildCustomTextField(
+                  currentPasswordController ,
+                'Current Password',
+                (value) {
+                  if(currentPasswordController.text.isNotEmpty && newPasswordController.text.isEmpty)
+                    return 'Please confirm the new Password';
+                  else if(confirmPasswordController.text !=newPasswordController.text)
+                    return 'Confirm Password & Password fields must match';
+                  return null;
+                },
+                currentPasswordNode,
+                newPasswordNode),
+            buildCustomTextField(
+                  newPasswordController,
+                'New Password',
+                (value) {
+                  return null;
+                },
+                newPasswordNode,
+                confirmPasswordNode),
+            buildCustomTextField(
+                
+                  confirmPasswordController,
+                'Confirm New Password',
+                (value) {
+                  if(newPasswordController.text.isNotEmpty && confirmPasswordController.text.isEmpty)
+                    return 'Please confirm the new Password';
+                  return null;
+                },
+                confirmPasswordNode,
+                null),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: FlatButton(
+                onPressed: () async {
+                  if (_accountDetailsFormKey.currentState.validate()) {
+                    var dataMap = {
+                      "email":emailController.text.toString(),
+                      "first_name":firstNameController.text.toString(),
+                      "last_name":lastNameController.text.toString(),
+                    //  "username":displayNameController.text.toString(),
+                      "password":newPasswordController.text.toString()
+                      };
+
+                    print(jsonEncode(dataMap));
+                    var result =  await woocommerce.updateCustomer(id: customer.id,data:dataMap);
+                    if(result!=null){
+                      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Account details updated Successfully.')));
+                    }
+                    else{
+                      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Account details update failed.')));
+                    }
+                  } else {
+                    autovalidate = true;
+                  }
+                },
+                color: kPrimaryColor,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
+                  child: Text(
+                    'Save Changes',
+                    style: TextStyle(
+                      fontFamily: kDefaultFontFamily,
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal,
+                      fontSize: getFontSize(context, 0),
+                    ),
                   ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
 
   Widget ordersScreen() {
-    return StreamBuilder(
-        stream: woocommerce
-            .getOrders(customer: userID)
-            .asStream()
-            .asBroadcastStream(),
-        builder: (context, snapshot) {
-          if (snapshot.data == null) {
-            return Center(
-                child: Text(
-              'No orders to display',
-              style: TextStyle(fontFamily: kDefaultFontFamily, fontSize: getFontSize(context, 0)),
-            ));
-          }
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                for (WooOrder order in snapshot.data)
-                  ListTile(
-                    leading: Text(
-                      order.dateCreated,
-                      style: TextStyle(
-                          fontFamily: kDefaultFontFamily, fontSize: getFontSize(context, -2)),
-                    ),
-                    title: Text(
-                      order.number,
-                      style: TextStyle(
-                          fontFamily: kDefaultFontFamily, fontSize: getFontSize(context, -2)),
-                    ),
-                    subtitle: Text(
-                      order.total,
-                      style: TextStyle(
-                          fontFamily: kDefaultFontFamily, fontSize: getFontSize(context, -2)),
-                    ),
-                    trailing: Column(
-                      children: [
-                        FlatButton(
-                            color: kPrimaryColor,
-                            onPressed: () {},
-                            child: Text(
-                              'View',
-                              style: TextStyle(
-                                  fontFamily: kDefaultFontFamily,
-                                  fontSize: getFontSize(context, -2),
-                                  color: Colors.white),
-                            )),
-                        Text(
-                          order.status,
-                          style: TextStyle(
-                              fontFamily: kDefaultFontFamily, fontSize: getFontSize(context, -2)),
-                        ),
-                      ],
-                    ),
-                  )
-              ],
-            ),
-          );
-        });
+    return MyOrdersScreen();
   }
 
   @override
@@ -384,14 +356,14 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     super.initState();
     SharedPreferences.getInstance().then((value) {
       setState(() {
-        userID = value.getInt('userID');
+        userID = int.parse(value.getString(PrefHelper.PREF_USER_ID));
         woocommerce.getCustomerById(id: userID).then(
           (value){
             customer=value;
             emailController.text=customer.email;
             firstNameController.text=customer.firstName;
             lastNameController.text=customer.lastName;
-            displayNameController.text=customer.username;
+            //displayNameController.text=customer.username;
             setState(() {
                _loading=false;
             });
@@ -406,7 +378,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     _tabController.dispose();
     newPasswordController.dispose();
     emailController.dispose();
-    displayNameController.dispose();
+   // displayNameController.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
     currentPasswordController.dispose();
@@ -422,6 +394,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
     _large = ResponsiveWidget.isScreenLarge(_width, _pixelRatio);
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(75),
           child: BaristaAppBar(isLarge: _large),
