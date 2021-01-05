@@ -99,7 +99,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         Consumer<CustomerProvider>(
                           builder: (ctx, customer, _) {
+                           customer.getCustomerData();
                             customerProvider = customer;
+
                             return Text(customer
                                 .getCustomerDetail?.shipping?.address1 ??
                                 'No Address Found');

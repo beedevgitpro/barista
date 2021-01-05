@@ -28,6 +28,8 @@ class WebService{
 
   static Future<LoginResponseModel> loginUser(
       String email, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     LoginResponseModel loginResponseModel;
     try {
       var response = await Dio().post(kTokenUrl,
@@ -37,6 +39,12 @@ class WebService{
           }));
       if (response.statusCode == 200) {
         loginResponseModel = LoginResponseModel.fromJson(response.data);
+        prefs.setString(PrefHelper.PREF_AUTH_TOKEN, loginResponseModel.token);
+
+        prefs.setString(PrefHelper.PREF_USER_ID, loginResponseModel.userId);
+         prefs.setString(PrefHelper.PREF_USER_NAME, loginResponseModel.userEmail);
+
+
 
         Directory appDocDir = await getApplicationDocumentsDirectory();
         String appDocPath = appDocDir.path;
@@ -354,16 +362,17 @@ class WebService{
             HttpHeaders.contentTypeHeader: 'application/json'
           }));
       if (response.statusCode == 200) {
-            message=response.data[0]['message']);
+            message=jsonDecode(response.data['message']);
       }
       else if(response.statusCode==401){
-          message=response.data[0]['message'];
+          message=jsonDecode(response.data['message']);
       }
       else{
-         message=response.data[0]['message'];
+         message=jsonDecode(response.data['message']);
       }
     } on DioError catch (error) {
       print(error.message);
+      message='This $email is not registered with us';
      
     }
     return message;

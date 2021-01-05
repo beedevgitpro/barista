@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:woocommerce/woocommerce.dart';
 
 class LoginScreen extends StatefulWidget {
-  static String routeName;
+  static String routeName='/login_screen';
 
   @override
   _LoginScreenState createState() => _LoginScreenState();

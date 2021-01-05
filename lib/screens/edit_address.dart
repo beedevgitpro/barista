@@ -354,8 +354,8 @@ class _EditAddressState extends State<EditAddress> {
                                   "state": selectedState,
                                   "postcode": postcode,
                                   "country": "US",
-                                  "email": email,
-                                  "phone": phone
+                                  //"email": email,
+                                 // "phone": phone
                                 }}else...{
                                   "shipping": {
                                     "first_name": firstName,
