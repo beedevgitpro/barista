@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 class CustomerProvider with ChangeNotifier {
   CustomerDetailResponseModel _customerDetail;
 
-  getCustomerData() async {
+  Future<CustomerDetailResponseModel> getCustomerData() async {
     // _cartList.forEach((key, cartI) {
     //   total += cartI.price * cartI.quantity;
     // });
     _customerDetail = await WebService.fetchCustomerDetails();
     notifyListeners();
+    return _customerDetail;
   }
-
   CustomerDetailResponseModel get getCustomerDetail {
     return _customerDetail;
   }

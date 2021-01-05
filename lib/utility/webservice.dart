@@ -341,7 +341,8 @@ class WebService{
             HttpHeaders.contentTypeHeader: 'application/json'
           }));
       if (response.statusCode == 200) {
-        
+        customerDetailResponseModel =
+            CustomerDetailResponseModel.fromJson(response.data);
       }
     } on DioError catch (error) {
       print(error.message);

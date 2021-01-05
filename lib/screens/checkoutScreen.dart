@@ -7,6 +7,7 @@ import 'package:barista/providers/payment_provider.dart';
 import 'package:barista/request_models/create_order_request_model.dart';
 import 'package:barista/response_models/customer_detail_response_model.dart';
 import 'package:barista/screens/landingScreen.dart';
+import 'package:barista/screens/my_account.dart';
 import 'package:barista/screens/payment_method.dart';
 import 'package:barista/utility/PrefHelper.dart';
 import 'package:flutter/cupertino.dart';
@@ -99,7 +100,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         Consumer<CustomerProvider>(
                           builder: (ctx, customer, _) {
-                           customer.getCustomerData();
+
                             customerProvider = customer;
 
                             return Text(customer
@@ -111,10 +112,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                 ),
-                Text('Change',
-                    style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        color: Theme.of(context).primaryColor)),
+                InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(MyAccount.routeName);
+                    },
+                  child: Text('Change',
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Theme.of(context).primaryColor)),
+                ),
               ],
             ),
           ),

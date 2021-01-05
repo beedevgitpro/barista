@@ -71,6 +71,7 @@ class BaristaApp extends StatelessWidget {
           MyAccount.routeName:(context)=>MyAccount(),
           LoginScreen.routeName:(context)=>LoginScreen(),
           PaymentMethodScreen.routeName:(context)=>PaymentMethodScreen(),
+          LandingScreen.routeName:(context)=>LandingScreen(),
 
 
         },

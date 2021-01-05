@@ -40,7 +40,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   final enquiryTypeNode = FocusNode();
   final fNameNode = FocusNode();
   final lNameNode = FocusNode();
- // final displayNameNode = FocusNode();
+ final pNumberNode = FocusNode();
   final phoneNode = FocusNode();
   final emailNode = FocusNode();
   final messageNode = FocusNode();
@@ -52,7 +52,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
   TextEditingController  lastNameController=TextEditingController();
   TextEditingController  currentPasswordController=TextEditingController();
   TextEditingController  confirmPasswordController=TextEditingController();
- // TextEditingController  displayNameController=TextEditingController();
+ TextEditingController  phoneNumberController=TextEditingController();
   String selectedType = 'Sales';
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final WooCommerce woocommerce = WooCommerce(
@@ -255,21 +255,21 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                 },
                 emailNode,
                 null),
-           /* buildCustomTextField(
-                
-                  displayNameController,
-                'Display Name',
-                (value) {
-                  if (value.isEmpty) {
-                    if (!errFlag) {
-                      errFlag = true;
-                      displayNameNode.requestFocus();
-                    }
-                    return 'Required';
-                  }
-                },
-                displayNameNode,
-                phoneNode),*/
+           // buildCustomTextField(
+           //
+           //        phoneNumberController,
+           //      'Phone Number',
+           //      (value) {
+           //        if (value.isEmpty) {
+           //          if (!errFlag) {
+           //            errFlag = true;
+           //            pNumberNode.requestFocus();
+           //          }
+           //          return 'Required';
+           //        }
+           //      },
+           //      pNumberNode,
+           //      currentPasswordNode,isNumber: true),
             buildCustomTextField(
                   currentPasswordController ,
                 'Current Password',
@@ -310,7 +310,8 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
                       "email":emailController.text.toString(),
                       "first_name":firstNameController.text.toString(),
                       "last_name":lastNameController.text.toString(),
-                    //  "username":displayNameController.text.toString(),
+                     "username":emailController.text.toString(),
+                      //"phone":phoneNumberController.text.toString(),
                       "password":newPasswordController.text.toString()
                       };
 
@@ -359,6 +360,7 @@ class _MyAccountState extends State<MyAccount> with SingleTickerProviderStateMix
         userID = int.parse(value.getString(PrefHelper.PREF_USER_ID));
         woocommerce.getCustomerById(id: userID).then(
           (value){
+            print('Email '+value.email.toString());
             customer=value;
             emailController.text=customer.email;
             firstNameController.text=customer.firstName;
