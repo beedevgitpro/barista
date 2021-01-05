@@ -61,8 +61,10 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                   child: CircularProgressIndicator(),
                 );
               } else if (snapshot.data.length == 0) {
-                return Container(
-                  child: Text('You have no orders.'),
+                return Center(
+                  child: Container(
+                    child: Text('You have no orders.'),
+                  ),
                 );
               }
               List<OrderListResponseModel> list = snapshot.data;

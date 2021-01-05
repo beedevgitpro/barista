@@ -69,7 +69,7 @@ class _EditAddressState extends State<EditAddress> {
       streetAddress = widget.customer.billing?.address1??='';
       postcode = widget.customer.billing?.postcode??='';
       phone = widget.customer.billing?.phone??='';
-      email = widget.customer.billing?.email??='';
+      email = widget.customer.email??='';
     }
     else{
       firstName = widget.customer.shipping?.firstName??='';
@@ -354,8 +354,8 @@ class _EditAddressState extends State<EditAddress> {
                                   "state": selectedState,
                                   "postcode": postcode,
                                   "country": "US",
-                                  "email": email,
-                                  "phone": phone
+                                  "email": email??" ",
+                                  "phone": phone??" ",
                                 }}else...{
                                   "shipping": {
                                     "first_name": firstName,

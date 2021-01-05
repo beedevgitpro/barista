@@ -19,13 +19,17 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
+import '../constants.dart';
 import 'PrefHelper.dart';
 
 class WebService{
+  static String message;
 
 
   static Future<LoginResponseModel> loginUser(
       String email, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     LoginResponseModel loginResponseModel;
     try {
       var response = await Dio().post(kTokenUrl,
@@ -35,6 +39,12 @@ class WebService{
           }));
       if (response.statusCode == 200) {
         loginResponseModel = LoginResponseModel.fromJson(response.data);
+        prefs.setString(PrefHelper.PREF_AUTH_TOKEN, loginResponseModel.token);
+
+        prefs.setString(PrefHelper.PREF_USER_ID, loginResponseModel.userId);
+         prefs.setString(PrefHelper.PREF_USER_NAME, loginResponseModel.userEmail);
+
+
 
         Directory appDocDir = await getApplicationDocumentsDirectory();
         String appDocPath = appDocDir.path;
@@ -341,5 +351,33 @@ class WebService{
     }
     return customerDetailResponseModel;
   }
+
+
+
+    static Future ForgetPasswordAPI({
+      String email}) async {
+    try {
+      var response = await Dio().post(kBaseUrl+'',
+          data: {"user_login": email,},
+          options: new Options(headers: {
+            HttpHeaders.contentTypeHeader: 'application/json'
+          }));
+      if (response.statusCode == 200) {
+            message=jsonDecode(response.data['message']);
+      }
+      else if(response.statusCode==401){
+          message=jsonDecode(response.data['message']);
+      }
+      else{
+         message=jsonDecode(response.data['message']);
+      }
+    } on DioError catch (error) {
+      print(error.message);
+      message='This $email is not registered with us';
+     
+    }
+    return message;
+  }
+
 
 }
